@@ -38,7 +38,7 @@
 			top: 0;
 			left: 0;
 			margin: 10px;
-			width: calc(100% / 4 - 20px);
+			width: calc(100% / 3 - 20px);
 			height: auto;
 		}
 		.overlay.show {
@@ -128,7 +128,7 @@
 		function prev () {
 			
 			//Debug
-			console.log("Previous Page");
+			console.log("Previous Page", page);
 			
 			// Check If The Index Is Bigger Than Zero
 			// If True Go Back A Page
@@ -142,7 +142,7 @@
 		function next () {
 			
 			//Debug
-			console.log("Next Page");
+			console.log("Next Page", page);
 			
 			// Check If The Index Is Small Than The Max Page Size
 			// If True Go Back A Page
@@ -167,15 +167,21 @@
 			// And Add All The Images To The Container Element
 			for (var i=0;i<data.length;i++) {
 				
-				// Check If The Max Per Page Has Been Reached
-				// If True Break The Foor Loop
-				if (i >= page['max_per_page']) { break; }
 				
+				// Image Index
 				var imageIndex = i + (page['max_per_page']*page['index']);
 				
-				var urlBuild = url+data[i];
-				container.innerHTML += "<img data-id='"+data[i]+"' src='"+urlBuild+"'>";
-				overlay.innerHTML += "<img data-id='"+data[i]+"' src='"+urlBuild+"'>";
+				// Check If The Max Per Page Has Been Reached
+				// If True Break The For Loop
+				if (i >= page['max_per_page']) { break; }
+				
+				// Check If The Image Is Not Undefined
+				// If True Break The For Loop
+				if (imageIndex >= data.length) { break; }
+				
+				var urlBuild = url+data[imageIndex];
+				container.innerHTML += "<img data-id='"+data[imageIndex]+"' src='"+urlBuild+"'>";
+				overlay.innerHTML += "<img data-id='"+data[imageIndex]+"' src='"+urlBuild+"'>";
 			}
 			
 			// Add On Click Events To All Images
