@@ -76,6 +76,10 @@
 		</div>
 		<div class="container"></div>
 		<div class="overlay"></div>
+		<div class="controls">
+			<button onclick="prev()" >Previous</button>
+			<button onclick="next()" >Next</button>
+		</div>
 	</div>
 	<script>
 	
@@ -106,6 +110,11 @@
 			'width': 1920,
 			'height':1080
 		};
+		var page = {
+			'index': 0,
+			'max_per_page': 4,
+			'max_page_size': function () {return Math.ceil(data.length / this['max_per_page']);}
+		};
 		var url = 'https://unsplash.it/'+size["width"]+'/'+size["height"]+'?image=';
 		
 		// container as DOM Element
@@ -116,40 +125,92 @@
 		// Reference Of The Overlay DOM Element
 		var overlay = document.getElementsByClassName('overlay')[0];
 		
-		// Loop Through The Data Array
-		// And Add All The Images To The Container Element
-		for (var i=0;i<data.length;i++) {
-			var urlBuild = url+data[i];
-			container.innerHTML += "<img data-id='"+data[i]+"' src='"+urlBuild+"'>";
-			overlay.innerHTML += "<img data-id='"+data[i]+"' src='"+urlBuild+"'>";
+		function prev () {
+			
+			//Debug
+			console.log("Previous Page");
+			
+			// Check If The Index Is Bigger Than Zero
+			// If True Go Back A Page
+			if (page['index'] > 0) { 
+				page['index']--;
+				return UpdateUI();
+			}
+			
 		}
 		
-		// Add On Click Events To All Images
-		var images = container.getElementsByTagName("img");
-		var imagesBig = overlay.getElementsByTagName("img");
-		for (var i=0;i<images.length;i++) {
-			images[i].onclick = function () {
+		function next () {
+			
+			//Debug
+			console.log("Next Page");
+			
+			// Check If The Index Is Small Than The Max Page Size
+			// If True Go Back A Page
+			if (page['index'] < page['max_page_size']()) { 
+				page['index']++;
+				return UpdateUI();
+			}
+			
+			console.log(page);
+			
+		}
+		
+		function UpdateUI () {
+		
+			container.innerHTML = "";
+			overlay.innerHTML = "";
+			
+			// Debug
+			console.log("Update UI");
+			
+			// Loop Through The Data Array
+			// And Add All The Images To The Container Element
+			for (var i=0;i<data.length;i++) {
 				
-				var dataID = this.getAttribute("data-id");
-				for (var j=0;j<imagesBig.length;j++) {
-					var bigDataID = imagesBig[j].getAttribute("data-id");
-					if (dataID == bigDataID) {
-						imagesBig[j].className = "show";
-						overlay.className = "overlay show";
-						container.className = "container hide";
+				// Check If The Max Per Page Has Been Reached
+				// If True Break The Foor Loop
+				if (i >= page['max_per_page']) { break; }
+				
+				var imageIndex = i + (page['max_per_page']*page['index']);
+				
+				var urlBuild = url+data[i];
+				container.innerHTML += "<img data-id='"+data[i]+"' src='"+urlBuild+"'>";
+				overlay.innerHTML += "<img data-id='"+data[i]+"' src='"+urlBuild+"'>";
+			}
+			
+			// Add On Click Events To All Images
+			var images = container.getElementsByTagName("img");
+			var imagesBig = overlay.getElementsByTagName("img");
+			for (var i=0;i<images.length;i++) {
+				images[i].onclick = function () {
+					
+					var dataID = this.getAttribute("data-id");
+					for (var j=0;j<imagesBig.length;j++) {
+						var bigDataID = imagesBig[j].getAttribute("data-id");
+						if (dataID == bigDataID) {
+							imagesBig[j].className = "show";
+							overlay.className = "overlay show";
+							container.className = "container hide";
+						}
 					}
-				}
-				
-			};
+					
+				};
+			}
+			
+			for (var i=0;i<imagesBig.length;i++) {
+				imagesBig[i].onclick = function () {
+					this.className = "";
+					overlay.className = "overlay";
+					container.className = "container";
+				};
+			}
+			
+			
 		}
 		
-		for (var i=0;i<imagesBig.length;i++) {
-			imagesBig[i].onclick = function () {
-				this.className = "";
-				overlay.className = "overlay";
-				container.className = "container";
-			};
-		}
+		// Start Up The Javascript
+		UpdateUI();
+		
 		
 	</script>
 </body>
