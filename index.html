@@ -80,6 +80,7 @@
 			<button onclick="prev()" >Previous</button>
 			<button onclick="next()" >Next</button>
 		</div>
+		<div class="buffer"></div>
 	</div>
 	<script>
 	
@@ -125,6 +126,10 @@
 		// Reference Of The Overlay DOM Element
 		var overlay = document.getElementsByClassName('overlay')[0];
 		
+		// buffer as DOM Element
+		// Reference Of The Buffer DOM Element
+		var buffer = document.getElementsByClassName('buffer')[0];
+		
 		function prev () {
 			
 			//Debug
@@ -159,6 +164,7 @@
 		
 			container.innerHTML = "";
 			overlay.innerHTML = "";
+			buffer.innerHTML = "";
 			
 			// Debug
 			console.log("Update UI");
@@ -171,15 +177,22 @@
 				// Image Index
 				var imageIndex = i + (page['max_per_page']*page['index']);
 				
+				// URL For Image
+				var urlBuild = url+data[imageIndex];
+				
 				// Check If The Max Per Page Has Been Reached
 				// If True Break The For Loop
-				if (i >= page['max_per_page']) { break; }
+				if (i >= page['max_per_page']*2) { break; }
+				if (i >= page['max_per_page']) {
+					buffer.innerHTML += "<img src='"+urlBuild+"'>";
+					continue;
+				}
 				
 				// Check If The Image Is Not Undefined
 				// If True Break The For Loop
 				if (imageIndex >= data.length) { break; }
 				
-				var urlBuild = url+data[imageIndex];
+				
 				container.innerHTML += "<img data-id='"+data[imageIndex]+"' src='"+urlBuild+"'>";
 				overlay.innerHTML += "<img data-id='"+data[imageIndex]+"' src='"+urlBuild+"'>";
 			}
