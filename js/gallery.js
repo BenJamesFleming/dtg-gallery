@@ -235,6 +235,9 @@ function Gallery(data=null, urlBuilder=null, captionBuilder=null, debug=false)
 
 			// URL For Image
 			var url = config.urlBuilder(imageIndex, config.data[imageIndex]);
+			
+			// Caption For Image
+			var caption = config.captionBuilder(imageIndex, config.data[imageIndex]);
 
 			// Check If The Max Per Page Has Been Reached
 			// If True Break The For Loop
@@ -253,7 +256,7 @@ function Gallery(data=null, urlBuilder=null, captionBuilder=null, debug=false)
 
 			// Add The Image To The Container
 			// Then To The Overlay
-			config.dom.container.innerHTML += "<img data-id='"+id+"' src='"+url+"' alt='"+config.captionBuilder(imageIndex, config.data[imageIndex])+"'>";
+			config.dom.container.innerHTML += "<img data-id='"+id+"' src='"+url+"'><span>"+caption+"</span></img>";
 			config.dom.overlay.innerHTML += "<img data-id='"+id+"' src='"+url+"'>";
 		}
 
