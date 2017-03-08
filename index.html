@@ -3,80 +3,7 @@
 <head>
 	<title>Gallery</title>
 	<link href="https://fonts.googleapis.com/css?family=PT+Sans" rel="stylesheet">
-	<style>
-		body {
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			margin: 0;
-			padding: 0;
-			font-family: 'PT Sans', sans-serif;
-		}
-		.buffer {display: none;}
-		.label {
-			margin: 2vw;
-			padding-left: 12px;
-			display: flex;
-			flex-direction: column;
-			align-items: flex-start;
-			justify-content: center;
-		}
-		.container {
-			max-width: 100%;
-			margin: 0 2vw;
-			display: flex;
-			flex-direction: row;
-			flex-wrap: wrap;
-			align-items: center;
-			justify-content: flex-start;
-		}
-		.container.hide {
-			overflow: hidden;
-			display: none;
-		}
-		.container>img {
-			position: relative;
-			top: 0;
-			left: 0;
-			margin: 10px;
-			width: calc(100% / 3 - 20px);
-			height: auto;
-		}
-		.overlay.show {
-			background: #eee;
-			position: fixed;
-			top: 0;
-			left: 0;
-			width: 100vw;
-			height: 100vh;
-			display: flex;
-			flex-direction: center;
-			align-items: center;
-		}
-		.overlay>img {
-			display: none;
-			max-width: 100%;
-			height: auto;
-		}
-		.overlay>img.show {
-			display: block;
-		}
-		.controls {
-			padding: 10px 0;
-			display: flex;
-			align-items: center;
-			justify-content: center;
-		}
-		.controls>button {
-			margin: 0 10px;	
-		}
-		@media only screen  and (max-width : 1000px) {
-			.container>img { width: calc(100% / 3 - 20px) }
-		}
-		@media only screen  and (max-width : 700px) {
-			.container>img { width: calc(100% / 2 - 20px) }
-		}
-	</style>
+	<link rel="stylesheet" type="text/css" href="css/main.css">
 </head>
 <body>
 	<div class="wrapper">
@@ -86,161 +13,76 @@
 		</div>
 		<div class="container"></div>
 		<div class="overlay"></div>
+		<div class="overlay overlay_controls">
+			<button onclick="gallery.next()" >Next</button>
+			<button onclick="gallery.prev()" >Previous</button>
+		</div>
 		<div class="controls">
-			<button onclick="prev()" >Previous</button>
-			<button onclick="next()" >Next</button>
+			<button onclick="gallery.prev()" >Previous</button>
+			<button onclick="gallery.next()" >Next</button>
 		</div>
 		<div class="buffer"></div>
 	</div>
+	<script src="js/gallery.js"></script>
 	<script>
-	
-		// Variables
-		// data as arr; The IDs of the images on unsplash.it
-		// size as obj; The Width And Height Of The Images To Request
-		// url as str; The String Of The Image URL 
 		var data = [
-			'1084',
-			'1074',
-			'1062',
-			'1024',
-			'1020',
-			'1003',
-			'943',
-			'881',
-			'790',
-			'783',
-			'718',
-			'659',
-			'593',
-			'582',
-			'433',
-			'237',
-			'219',
+			{
+				'id': '1084',
+				'caption': 'Seal'
+			},{
+				'id': '1074',
+				'caption': 'Tiger'
+			},{
+				'id': '1062',
+				'caption': 'Puppy Dog'
+			},{
+				'id': '1024',
+				'caption': 'America'
+			},{
+				'id': '1020',
+				'caption': 'Canada'
+			},{
+				'id': '1003',
+				'caption': 'Dear #1'
+			},{
+				'id': '943',
+				'caption': 'Dear #2'
+			},{
+				'id': '881',
+				'caption': 'Sea Land'
+			},{
+				'id': '790',
+				'caption': 'Dear #3'
+			},{
+				'id': '783',
+				'caption': 'Monkey? Baboon?'
+			},{
+				'id': '718',
+				'caption': 'Big Puppy Dog'
+			},{
+				'id': '659',
+				'caption': 'Dusty'
+			},{
+				'id': '593',
+				'caption': 'King Ezekiel'
+			},{
+				'id': '582',
+				'caption': 'Puppy Dog #2'
+			},{
+				'id': '433',
+				'caption': 'Care Bear'
+			},{
+				'id': '237',
+				'caption': 'Black Sheep'
+			},{
+				'id': '219',
+				'caption': 'P p p poker face, p p p poker face'
+			}
 		];
-		var size = {
-			'width': 1920,
-			'height':1080
-		};
-		var page = {
-			'index': 0,
-			'max_per_page': 4,
-			'max_page_size': function () {return Math.ceil(data.length / this['max_per_page']);}
-		};
-		var url = 'https://unsplash.it/'+size["width"]+'/'+size["height"]+'?image=';
-		
-		// container as DOM Element
-		// Refernece Of The Container DOM Element
-		var container = document.getElementsByClassName('container')[0];
-		
-		// overlay as DOM Element
-		// Reference Of The Overlay DOM Element
-		var overlay = document.getElementsByClassName('overlay')[0];
-		
-		// buffer as DOM Element
-		// Reference Of The Buffer DOM Element
-		var buffer = document.getElementsByClassName('buffer')[0];
-		
-		function prev () {
-			
-			//Debug
-			console.log("Previous Page", page);
-			
-			// Check If The Index Is Bigger Than Zero
-			// If True Go Back A Page
-			if (page['index'] > 0) { 
-				page['index']--;
-				return UpdateUI();
-			}
-			
-		}
-		
-		function next () {
-			
-			//Debug
-			console.log("Next Page", page);
-			
-			// Check If The Index Is Small Than The Max Page Size
-			// If True Go Back A Page
-			if (page['index'] < page['max_page_size']()) { 
-				page['index']++;
-				return UpdateUI();
-			}
-			
-			console.log(page);
-			
-		}
-		
-		function UpdateUI () {
-		
-			container.innerHTML = "";
-			overlay.innerHTML = "";
-			buffer.innerHTML = "";
-			
-			// Debug
-			console.log("Update UI");
-			
-			// Loop Through The Data Array
-			// And Add All The Images To The Container Element
-			for (var i=0;i<data.length;i++) {
-				
-				
-				// Image Index
-				var imageIndex = i + (page['max_per_page']*page['index']);
-				
-				// URL For Image
-				var urlBuild = url+data[imageIndex];
-				
-				// Check If The Max Per Page Has Been Reached
-				// If True Break The For Loop
-				if (i >= page['max_per_page']*2) { break; }
-				if (i >= page['max_per_page']) {
-					buffer.innerHTML += "<img src='"+urlBuild+"'>";
-					continue;
-				}
-				
-				// Check If The Image Is Not Undefined
-				// If True Break The For Loop
-				if (imageIndex >= data.length) { break; }
-				
-				
-				container.innerHTML += "<img data-id='"+data[imageIndex]+"' src='"+urlBuild+"'>";
-				overlay.innerHTML += "<img data-id='"+data[imageIndex]+"' src='"+urlBuild+"'>";
-			}
-			
-			// Add On Click Events To All Images
-			var images = container.getElementsByTagName("img");
-			var imagesBig = overlay.getElementsByTagName("img");
-			for (var i=0;i<images.length;i++) {
-				images[i].onclick = function () {
-					
-					var dataID = this.getAttribute("data-id");
-					for (var j=0;j<imagesBig.length;j++) {
-						var bigDataID = imagesBig[j].getAttribute("data-id");
-						if (dataID == bigDataID) {
-							imagesBig[j].className = "show";
-							overlay.className = "overlay show";
-							container.className = "container hide";
-						}
-					}
-					
-				};
-			}
-			
-			for (var i=0;i<imagesBig.length;i++) {
-				imagesBig[i].onclick = function () {
-					this.className = "";
-					overlay.className = "overlay";
-					container.className = "container";
-				};
-			}
-			
-			
-		}
-		
-		// Start Up The Javascript
-		UpdateUI();
-		
-		
+		var urlBuilder = function (index, value) { return "https://unsplash.it/1920/1080?image="+value.id; };
+		var captionBuilder = function (index, value) { return value.caption; }
+		var gallery = new Gallery(data, urlBuilder, captionBuilder);
+		gallery.run();
 	</script>
 </body>
 </html>

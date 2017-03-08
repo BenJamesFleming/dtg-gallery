@@ -1,0 +1,104 @@
+* {
+    overflow: hidden;
+}
+body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    padding: 0;
+    font-family: 'PT Sans', sans-serif;
+}
+.buffer {display: none;}
+.label {
+    margin: 2vw;
+    padding-left: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+}
+.container {
+    max-width: 100%;
+    margin: 0 2vw;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-start;
+}
+.container.hide {
+    overflow: hidden;
+    display: none;
+}
+.container>img {
+    position: relative;
+    top: 0;
+    left: 0;
+    margin: 10px;
+    width: calc(100% / 4 - 20px);
+    height: auto;
+}
+.overlay.show {
+    background: #eee;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: center;
+    align-items: center;
+}
+.overlay>img {
+    display: none;
+    max-width: 100%;
+    height: auto;
+}
+.overlay>img.show {
+    display: block;
+}
+.overlay_controls {
+    width: 100vw;
+    height: 100vh;
+    display: none;
+}
+.overlay_controls.show {
+    display: block;
+}
+.overlay_controls>button {
+    width: 20vh;
+    height: 20vh;
+    background: rgba(0,0,0,0.5);
+    border: none;
+    border-radius: 50%;
+    position: fixed;
+    left: calc(-20vh / 2 - 2vh);
+    top: calc(100vh / 2 - 10vh);
+    transition: all 0.1s ease-in-out;
+}
+.overlay_controls>button:nth-child(1) {
+    left: calc(100vw - 20vh / 2 + 2vh);
+}
+.overlay_controls>button:hover {
+    background: rgba(0,0,0,0.7);
+    left: calc(-20vh / 2);
+}
+.overlay_controls>button:nth-child(1):hover {
+    left: calc(100vw - 20vh / 2);
+}
+.controls {
+    padding: 10px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.controls>button {
+    margin: 0 10px;
+}
+@media only screen  and (max-width : 1000px) {
+    .container>img { width: calc(100% / 3 - 20px) }
+}
+@media only screen  and (max-width : 700px) {
+    .container>img { width: calc(100% / 2 - 20px) }
+}
