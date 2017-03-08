@@ -20,6 +20,13 @@ function Gallery(data=null, urlBuilder=null, captionBuilder=null, debug=false)
             'overlay':    document.getElementsByClassName('overlay')[0],
             'overlay_controls': document.getElementsByClassName('overlay_controls')[0],
             'buffer':     document.getElementsByClassName('buffer')[0],
+			'default_classes': {
+				'container': 'container ',
+				'img_wrap': 'img_wrap ',
+				'overlay': 'overlay ',
+				'overlay_controls': 'overlay_controls ',
+				'buffer': 'buffer ',
+			},
         },
         'page': {
             'index': 0,
@@ -256,8 +263,8 @@ function Gallery(data=null, urlBuilder=null, captionBuilder=null, debug=false)
 
 			// Add The Image To The Container
 			// Then To The Overlay
-			config.dom.container.innerHTML += "<img data-id='"+id+"' src='"+url+"'><span>"+caption+"</span></img>";
-			config.dom.overlay.innerHTML += "<img data-id='"+id+"' src='"+url+"'>";
+			config.dom.container.innerHTML += "<div class='img_wrap' data-id='"+id+"'><img src='"+url+"'><div class='caption'>"+caption+"</div></div>";
+			config.dom.overlay.innerHTML += "<img class='img_wrap' data-id='"+id+"' src='"+url+"'>";
 		}
 
         //
@@ -267,8 +274,8 @@ function Gallery(data=null, urlBuilder=null, captionBuilder=null, debug=false)
         // Variables
         // image_list as arr;       The Images In The Container Element
         // images_overlay as arr;   The Images In The Overlay Element
-		var images_list = config.dom.container.getElementsByTagName("img");
-		var images_overlay = config.dom.overlay.getElementsByTagName("img");
+		var images_list = config.dom.container.getElementsByClassName("img_wrap");
+		var images_overlay = config.dom.overlay.getElementsByClassName("img_wrap");
 
         // For Loop
         // Loop Through The images_list And Add OnClick Functions
@@ -286,10 +293,10 @@ function Gallery(data=null, urlBuilder=null, captionBuilder=null, debug=false)
                         config.overlay.in_overlay = true;
                         config.overlay.index = j;
 
-						images_overlay[j].className = "show";
-						config.dom.overlay.className = "overlay show";
-						config.dom.overlay_controls.className = "overlay_controls show";
-						config.dom.container.className = "container hide";
+						images_overlay[j].className = config.dom.default_classes.img_wrap+"show";
+						config.dom.overlay.className = config.dom.default_classes.overlay+"show";
+						config.dom.overlay_controls.className = config.dom.default_classes.overlay_controls+"show";
+						config.dom.container.className = config.dom.default_classes.container+"hide";
 					}
 				}
 
@@ -303,10 +310,10 @@ function Gallery(data=null, urlBuilder=null, captionBuilder=null, debug=false)
 			images_overlay[i].onclick = function () {
                 config.overlay.in_overlay = false;
 
-				this.className = "";
-				config.dom.overlay.className = "overlay";
-                config.dom.overlay_controls.className = "overlay_controls";
-				config.dom.container.className = "container";
+				this.className = config.dom.default_classes.img_wrap;
+				config.dom.overlay.className = config.dom.default_classes.overlay;
+                config.dom.overlay_controls.className = config.dom.default_classes.overlay_controls;
+				config.dom.container.className = config.dom.default_classes.container;
 			};
 		}
 
