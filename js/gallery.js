@@ -349,7 +349,7 @@ function Gallery(data=null, template=null, builders=null, debug=true)
         // Loop Through The images_list And Add OnClick Functions
 		for (var i=0;i<images_list.length;i++) {
 			
-			images_list[i].style.height = "calc(( 1080 / 1920 ) * "+images_list[i].offsetHeight+")";
+			images_list[i].style.height = "calc(( 1080 / 1920 ) * "+images_list[i].offsetHeight+")px";
 			
 			images_list[i].onclick = function () {
 
