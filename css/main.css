@@ -9,6 +9,11 @@ body {
     padding: 0;
     font-family: 'PT Sans', sans-serif;
 }
+.gallery {
+    width: 100vw;
+    height: 100vh;
+    overflow-y: scroll;
+}
 .buffer {display: none;}
 .label {
     margin: 2vw;
@@ -31,13 +36,27 @@ body {
     overflow: hidden;
     display: none;
 }
-.container>img {
+.container>.img_wrap {
     position: relative;
-    top: 0;
-    left: 0;
     margin: 10px;
     width: calc(100% / 4 - 20px);
     height: auto;
+}
+.container>.img_wrap>img {
+	width: 100%;
+	height: auto;
+}
+.contianer>.img_wrap>.caption{
+	background: rgba(0,0,0,0.2);
+	color: #eee;
+	position: absolute;
+	bottom: 20px;
+	left: 0;
+	width: 100%;
+	height: 80px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 }
 .overlay.show {
     background: #eee;
@@ -50,12 +69,16 @@ body {
     flex-direction: center;
     align-items: center;
 }
-.overlay>img {
+.overlay>.img_wrap {
     display: none;
-    max-width: 100%;
+    width: 100%;
     height: auto;
 }
-.overlay>img.show {
+.overlay>.img_wrap>img {
+	width: 100%;
+	height: auto;
+}
+.overlay>.img_wrap.show {
     display: block;
 }
 .overlay_controls {
@@ -77,8 +100,21 @@ body {
     top: calc(100vh / 2 - 10vh);
     transition: all 0.1s ease-in-out;
 }
+.overlay_controls>button>i {
+    font-size: 10rem;
+    color: #eee;
+    width: 20vh;
+    height: 20vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 38px;
+}
 .overlay_controls>button:nth-child(1) {
     left: calc(100vw - 20vh / 2 + 2vh);
+}
+.overlay_controls>button:nth-child(1)>i {
+    margin-left: -50px;
 }
 .overlay_controls>button:hover {
     background: rgba(0,0,0,0.7);

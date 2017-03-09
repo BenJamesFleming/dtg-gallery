@@ -3,10 +3,11 @@
 <head>
 	<title>Gallery</title>
 	<link href="https://fonts.googleapis.com/css?family=PT+Sans" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 	<link rel="stylesheet" type="text/css" href="css/main.css">
 </head>
 <body>
-	<div class="wrapper">
+	<div class="gallery">
 		<div class="label">
 			<h1 style="margin: 0;">Animal Gallery</h1><br>
 			<h3 style="color:#333;margin: -20px 0 0 0;">By Ben Fleming</h3>
@@ -14,8 +15,8 @@
 		<div class="container"></div>
 		<div class="overlay"></div>
 		<div class="overlay overlay_controls">
-			<button onclick="gallery.next()" >Next</button>
-			<button onclick="gallery.prev()" >Previous</button>
+			<button onclick="gallery.next()" ><i class="material-icons">&#xE315;</i></button>
+			<button onclick="gallery.prev()" ><i class="material-icons">&#xE314;</i></button>
 		</div>
 		<div class="controls">
 			<button onclick="gallery.prev()" >Previous</button>
@@ -25,6 +26,9 @@
 	</div>
 	<script src="js/gallery.js"></script>
 	<script>
+
+		// Define The Data For The Gallery To User
+		// data_array -> object -> { id , caption , ... }
 		var data = [
 			{
 				'id': '1084',
@@ -79,9 +83,28 @@
 				'caption': 'P p p poker face, p p p poker face'
 			}
 		];
-		var urlBuilder = function (index, value) { return "https://unsplash.it/1920/1080?image="+value.id; };
-		var captionBuilder = function (index, value) { return value.caption; }
-		var gallery = new Gallery(data, urlBuilder, captionBuilder);
+
+		// Define Variabels
+		// Build The Builders That The Gallery Will Call To Get Data
+		// Then Build The Template With The ["{{", "}}"] Signals, To Show Where The Params Are
+		var builders = {
+			'url': function (index, value) { return "https://unsplash.it/1920/1080?image="+value.id; },
+			'url_s': function (index, value) { return "https://unsplash.it/100/100?image="+value.id; },
+			'caption': function (index, value) { return value.caption; },
+		};
+		var template = "<div class='img_wrap' data-id='{{ id }}'><img src='{{ url }}'><div class='caption'>{{ caption }}</div></div>";
+
+		// Load The Gallery Class
+		// load With The Data, Template And Builder Functions
+		var gallery = new Gallery(data, template, builders);
+
+		//
+		// Config Edit
+		// This Is Where You Should Make Any Static Changes To The Config
+		gallery.config.page.max_per_page = 6;
+
+		// Finally Run The Gallery To Save The Config
+		// And Start The UI
 		gallery.run();
 	</script>
 </body>
