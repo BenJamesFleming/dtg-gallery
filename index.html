@@ -89,7 +89,7 @@
 		// Then Build The Template With The ["{{", "}}"] Signals, To Show Where The Params Are
 		var builders = {
 			'url': function (index, value) { return "https://unsplash.it/1920/1080?image="+value.id; },
-			'url_s': function (index, value) { return "https://unsplash.it/100/100?image="+value.id; },
+			'url_s': function (index, value) { return "https://unsplash.it/100/100?blur&image="+value.id; },
 			'caption': function (index, value) { return value.caption; },
 		};
 		var template = "<div class='img_wrap' data-id='{{ id }}'><img src='{{ url_s }}'><img src='{{ url }}'><div class='caption'>{{ caption }}</div></div>";
