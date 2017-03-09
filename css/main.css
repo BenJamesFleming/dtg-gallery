@@ -37,15 +37,11 @@ body {
     display: none;
 }
 .container>.img_wrap {
-    position: absolute;
     margin: 10px;
     width: calc(100% / 4 - 20px);
     height: auto;
 }
 .container>.img_wrap>img {
-    	position: relative;
-	top: 0px;
-	left: 0px;
 	width: 100%;
 	height: auto;
 }
