@@ -92,7 +92,7 @@
 			'url_s': function (index, value) { return "https://unsplash.it/100/100?image="+value.id; },
 			'caption': function (index, value) { return value.caption; },
 		};
-		var template = "<div class='img_wrap' data-id='{{ id }}'><img src='{{ url }}'><div class='caption'>{{ caption }}</div></div>";
+		var template = "<div class='img_wrap' data-id='{{ id }}'><img src='{{ url_s }}'><img src='{{ url }}'><div class='caption'>{{ caption }}</div></div>";
 
 		// Load The Gallery Class
 		// load With The Data, Template And Builder Functions
