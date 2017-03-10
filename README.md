@@ -28,6 +28,25 @@ var data = {
 };
 ```
 
+## Template
+> The Template Can Be And Function Or A String
+
+###### Simple Example
+```javascript
+var template = "<img data-id='{{ id }}' scr='{{ url }}'>";
+```
+
+This Example Has 2 Parameters `{{ id }}`, `{{ url }}`.
+
+###### Advanced Example
+```javascript
+var template = function (index, value) {
+    return "<div class='img_wrap' data-id='{{ id }}' style='background-image: url(\"{{ url_s }}\")'><img src='{{ url }}'><div class='caption'>{{ caption }}</div></div>";
+};
+```
+
+This Example Has 4 Parameters `{{ id }}`, `{{ url_s }}`, `{{ url }}`, `{{ caption }}`.
+
 ## Builders
 > All Builder Need To Have A index and value parameters
 
