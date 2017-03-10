@@ -99,7 +99,8 @@ With The Return Value Of `builders['id'](index, value);` , And Then Do The Same 
 ***(Parameters That Do Not Have Builders Will Simply Be Cleared From The Template)***
 
 ###### Simple Example
-> This Example Shows How The Builders Could Be Used In A Simple Data System \n
+> This Example Shows How The Builders Could Be Used In A Simple Data System
+
 > *See The Simple Data Example*
 
 ```javascript
