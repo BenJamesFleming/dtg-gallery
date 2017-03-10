@@ -1,5 +1,6 @@
 # Gallery
-> gallery.js
+> This Is A Gallery Project For School, **DTG3** \n
+> Main File: js/gallery.js
 
 ## Data
 > The Data Needs To Be An Object, With All The Data For Use In The Program
@@ -36,9 +37,10 @@ var data = {
  * index as **int**;        This Is The Index Of The Value In The Array
  * value as **anything**;   This Is The Value Of The Data In The Array
 
-##### How It Works
+#### How It Works
 
-> The Program Will Run The Builder To Fill In The Template
+> The Program Will Run The Each Builder \n
+> To Fill In The Templates Parameters
 
 ###### E.G.
 ```javascript
@@ -46,11 +48,13 @@ var template = "<img data-id='{{ id }}' scr='{{ url }}'>";
 ```
 Where **{{ id }}** And **{{ url }}** Are The Parameters. \n
 The Template Will Find And Replace `"{{ id }}"` From The `template` Variable Above  \n
-With The Return Value Of `builders['id'](index, value);` , And Then Do The Same For All The Other Parameters That Have Builders
-
+With The Return Value Of `builders['id'](index, value);` , And Then Do The Same For All The Other Parameters That Have Builders \n
 ***(Parameters That Do Not Have Builders Will Simply Be Cleared From The Template)***
 
 ###### Simple Example
+> This Example Shows How The Builders Could Be Used In A Simple Data System \n
+> *See The Simple Data Example*
+
 ```javascript
 var builders = {
     'url': function (index, value) { return value },
@@ -58,6 +62,9 @@ var builders = {
 ```
 
 ###### Advanced Example
+> This Example Shows How The Builders Could Be Used With A More Complex Data System \n
+> *See The Advanced Data Example*
+
 ```javascript
 var builders = {
     'url': function (index, value) { return value.url; },
@@ -65,16 +72,21 @@ var builders = {
 };
 ```
 
-##### Default Types Of Builders
-> These Are Default And Do Not Need Setup For Basic Use
+#### Default Types Of Builders
+> These Are Default And Do Not Need Setup For Basic Use \n
+> But Many Need Setup For More Advanced Use Cases
 
- * Id Buidler   || Returns String, That Is Different For Each Data Point In The Array
- * URL Builder  || Returns String, The URL Of The Current Image
+* Id Buidler  
+    * Returns A String Value,\n That Is Different For Each Data Point In The Array
+* URL Builder
+    * Returns A String Value,\n This Is The URL Of The Current Image
 
- **Code For Default Builders**
- ```javascript
+###### Code For Default Builders
+> This Is The Code That Will Be Used If These Builder Functions Are Not Defined
+
+```javascript
 var builders = {
     'id': function (index, value) { return index; },
     'url': function (index, value) { return value; },
 };
- ```
+```
