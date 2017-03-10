@@ -44,8 +44,10 @@ var data = {
 ```javascript
 var template = "<img data-id='{{ id }}' scr='{{ url }}'>";
 ```
-The Template Will Find And Replace `"{{ id }}"`
+Where **{{ id }}** And **{{ url }}** Are The Parameters. \n
+The Template Will Find And Replace `"{{ id }}"` From The `template` Variable Above  \n
 With The Return Value Of `builders['id'](index, value);` , And Then Do The Same For All The Other Parameters That Have Builders
+
 ***(Parameters That Do Not Have Builders Will Simply Be Cleared From The Template)***
 
 ###### Simple Example
