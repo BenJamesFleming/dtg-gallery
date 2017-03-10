@@ -2,6 +2,8 @@
 <html>
 <head>
 	<title>Gallery</title>
+	<link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
+	<link rel="icon" href="img/favicon.ico" type="image/x-icon">
 	<link href="https://fonts.googleapis.com/css?family=PT+Sans" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 	<link rel="stylesheet" type="text/css" href="css/main.css">
@@ -20,6 +22,7 @@
 		</div>
 		<div class="controls">
 			<button onclick="gallery.prev()" >Previous</button>
+			<div class="page_btns"></div>
 			<button onclick="gallery.next()" >Next</button>
 		</div>
 		<div class="buffer"></div>
@@ -84,28 +87,36 @@
 			}
 		];
 
+		//
 		// Define Variabels
+		//
+
 		// Build The Builders That The Gallery Will Call To Get Data
-		// Then Build The Template With The ["{{", "}}"] Signals, To Show Where The Params Are
 		var builders = {
 			'url': function (index, value) { return "https://unsplash.it/1920/1080?image="+value.id; },
 			'url_s': function (index, value) { return "https://unsplash.it/100/56?blur&image="+value.id; },
 			'caption': function (index, value) { return value.caption; },
 		};
+
+		// Build The Template String With The ["{{", "}}"] Signals, To Show Where The Params Are
 		var template = "<div class='img_wrap' data-id='{{ id }}' style='background-image: url(\"{{ url_s }}\")'><img src='{{ url }}'><div class='caption'>{{ caption }}</div></div>";
 
-		// Load The Gallery Class
-		// load With The Data, Template And Builder Functions
-		var gallery = new Gallery(data, template, builders);
+		// Get Instance Of Gallery
+	    var gallery = new Gallery();
 
-		//
 		// Config Edit
 		// This Is Where You Should Make Any Static Changes To The Config
-		gallery.config.page.max_per_page = 6;
+	    // [START]
+	    gallery.data = data;
+		gallery.template = template;
+		gallery.builders = builders;
+		gallery.debug = true;
+	    gallery.max_per_page = 6;
+	    // [END]
 
-		// Finally Run The Gallery To Save The Config
+	    // Finally Run The Gallery To Save The Config
 		// And Start The UI
-		gallery.run();
+	    gallery.init();
 	</script>
 </body>
 </html>

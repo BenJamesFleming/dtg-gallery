@@ -1,22 +1,37 @@
 //
+// Gallery.js © Ben Fleming 2017
+// Author   : Ben Fleming
+// Email    : benfleming121@gmail.com
+// GitHub   : http://github.com/benjamesfleming/
 //
-//
+// Read The GitHub Page To Learn How To Use
 //
 
 // Function Gallery
-// This Is The Main Function
+// This Is The Main Function Class
 function Gallery(data=null, template=null, builders=null, debug=true)
 {
 
     // Define app as this;
     var app = this;
 
+    // Define User Editable Config
+    // Max Per Page, The Max Images On A Page
+    this.max_per_page = 4;
+    this.data = data;
+    this.template = template;
+    this.builders = builders;
+    this.debug = debug;
+
     // Build The Config
     this.config = {
-        'data': data,
-        'template': template,
-        'builders': builders,
-        'debug': debug,
+        'data': null,
+        'template': null,
+        'template': null,
+        'template_str': null,
+        'template_default': "<img class='img_wrap' src='{{ url }}' data-id='{{ id }}'>",
+        'builders': null,
+        'debug': null,
         'overlay': {
             'in_overlay': false,
             'index_old': 0,
@@ -24,6 +39,7 @@ function Gallery(data=null, template=null, builders=null, debug=true)
         },
         'dom': {
             'container':  document.getElementsByClassName('container')[0],
+			'controls': document.getElementsByClassName('controls')[0],
             'overlay':    document.getElementsByClassName('overlay')[0],
             'overlay_controls': document.getElementsByClassName('overlay_controls')[0],
             'buffer':     document.getElementsByClassName('buffer')[0],
@@ -32,7 +48,7 @@ function Gallery(data=null, template=null, builders=null, debug=true)
             'index': 0,
     		'max_per_page': 8,
             'buffer_number': 3,
-    		'max_page_size': function () {return Math.ceil(data.length / this['max_per_page']);}
+    		'max_page_size': function () {return Math.ceil(app.config.data.length / this['max_per_page']);}
         }
     };
     var config = this.config;
@@ -42,22 +58,83 @@ function Gallery(data=null, template=null, builders=null, debug=true)
     this.checkConfig = function (config) {
 
         // Debug The Config
-        console.log(config);
+        app.log(config);
 
         // Check That The Config Is Defined
-        if (typeof config === 'undefined') {
+        if (typeof config != 'object') {
             return app.raiseError("The Config Is Not Valid!", true);
         }
 
         // Check User Data
-        if (typeof config.data === 'undefined') {
+        if (typeof config.data != 'object') {
             return app.raiseError("The Gallery Has Been Given No Data!", true);
         }
 
+        // Check The Template
+        // If Not Valid Revert To Default
+        if (typeof config.template != 'function') {
+
+            // Check If Template Is A String
+            // If True Chnage To Fucntion With Current String
+            // Else Revert To Default
+            if (typeof config.template == 'string') {
+
+                // Set Template String
+                config.template_str = config.template;
+
+                // Change To Function
+                config.template = function (index, value) {
+                    return config.template_str;
+                };
+            } else {
+
+                // Revert To Default
+                config.template = function (index, value) {
+                    return config.template_default;
+                };
+            }
+        }
+
+        //
+        // ID Builder
+        //
+
+        // Check The Id Builder
+        // Check The It Is A Function
+        // Then Check That It Returns Valid Data
+        // By Check If It Return Different Id When Given Different Data
+        if (typeof config.builders['id'] !=  'function') {
+            config.builders['id'] = function (index, data) { return '_' + Math.random().toString(36).substr(2, 9); };
+        }
+
+        // Check That The Config Data Size Is Bigger Than 1
+        // If True Check The Id Function
+        if (config.data.length > 1) {
+
+            // Get The First Two Ids From The Data
+            // id[0] where data index = 0
+            // id[1] where data index = 1
+            var id=[
+                config.builders['id'](0, config.data[0]),
+                config.builders['id'](1, config.data[1]),
+            ];
+
+            // Check If The Ids Are The Same
+            // If True Then The Function Is Not Valid
+            // So We Will Log Error And Kill
+            if (id[0] == id[1]) {
+                return app.raiseError("The ID Builder Function Returned The Same Value For Two Different Images!", true);
+            }
+        }
+
+        //
+        // [END ID BUILDER]
+        //
+
         // Check URL Builder
         // If Not Valid Revert To Default
-        if (typeof config.builders['url'] === 'undefined') {
-            config.builders['url'] = function (index, data) { return data; }
+        if (!typeof config.builders['url'] === 'function') {
+            config.builders['url'] = function (index, data) { return data; };
         }
 
         // Return True
@@ -98,7 +175,7 @@ function Gallery(data=null, template=null, builders=null, debug=true)
 
     // Fucntion Next
     // Load The Check Page
-    this.next = function () {
+    this.next = function (user_index=null) {
 
 		// Debug
 		app.log("Loading Next Page / Image...");
@@ -218,15 +295,30 @@ function Gallery(data=null, template=null, builders=null, debug=true)
 
 	};
 
+	// Function Select
+	// Select The Next Page To Show
+	// For Use With Page Buttons
+	this.select = function (index) {
+
+		// Check That The User Index Is Valid
+		// And Is In The Data Array
+		if (index != null && index < config.page.max_page_size()) {
+			// Set Config Index To The User Index;
+			// Then Run UpdateUI To Apply The Changes
+			config.page.index = index;
+			return app.UpdateUI();
+		}
+	};
+
     // Function Inject HTML
     // Inject The Data Into The Template
-    this.InjectHTML = function (data, data_index) {
+    this.InjectHTML = function (data) {
 
         var signals = ["{{", "}}"];
         var params = [];
-        var tmp_template = config.template;
         var index = 0;
-        var output = config.template;
+        var tmp_template = config.template(data.index, data.value);
+        var output = tmp_template;
 
         // Get All The Params From The Template
         while (true) {
@@ -261,22 +353,11 @@ function Gallery(data=null, template=null, builders=null, debug=true)
             // Variables
             // param_trim
             var param_trim = params[i].trim();
-            //console.log(param_trim, data[param_trim], config.builders[param_trim]);
 
-            // Check For Current Param In The Data
-            // If True Load From The Data
-            // Else Look For Builder
-            if (typeof data[param_trim] != 'undefined') {
-
-                // Get The Data For The Current Param
-                var value = data[param_trim];
-            } else {
-
-                // Check For Builder
-                // If True Load Value From Builder
-                if (typeof config.builders[param_trim] != 'undefined') {
-                    var value = config.builders[param_trim](data_index, config.data[data_index]);
-                }
+            /// Check For Builder
+            // If True Load Value From Builder
+            if (typeof config.builders[param_trim] != 'undefined') {
+                var value = config.builders[param_trim](data.index, data.value);
             }
 
             // Inject The Current Param
@@ -311,15 +392,9 @@ function Gallery(data=null, template=null, builders=null, debug=true)
             // If True Break The For Loop
             if (imageIndex >= config.data.length) { break; }
 
-            // Data For Injection
-            //       Generate A Random ID
-			//       URL For Image
-			//       Caption For Image
-            // HTML With Injected Variables
-            var data = {
-                'id':       '_' + Math.random().toString(36).substr(2, 9),
-            };
-            var html = app.InjectHTML(data, imageIndex);
+            // HTML
+            // This Is The Formatted HTML TO Add To The
+            var html = app.InjectHTML({'index': imageIndex, 'value': config.data[imageIndex]});
 
 			// Check If The Max Per Page Has Been Reached
 			// If True Break The For Loop
@@ -348,9 +423,9 @@ function Gallery(data=null, template=null, builders=null, debug=true)
         // For Loop
         // Loop Through The images_list And Add OnClick Functions
 		for (var i=0;i<images_list.length;i++) {
-			
+
 			images_list[i].style.height = "calc(( 1080 / 1920 ) * "+images_list[i].offsetHeight+")px";
-			
+
 			images_list[i].onclick = function () {
 
                 // Get The Image ID Of The Current Image
@@ -399,7 +474,6 @@ function Gallery(data=null, template=null, builders=null, debug=true)
             // Get The Overlay Image
             // Then Add The Show Class To The Overlay Image
             var images_overlay = config.dom.overlay.getElementsByClassName("img_wrap");
-            console.log(images_overlay, config.overlay.index);
             images_overlay[config.overlay.index].className = "show";
 
             // Add The Class Names To The Divs Aswell
@@ -410,13 +484,37 @@ function Gallery(data=null, template=null, builders=null, debug=true)
         }
     };
 
-    // Funciton Run
+    // Funciton Init
     // Bootstrap The Gallery
-    this.run = function () {
+    this.init = function () {
+
+        // Add The User Edits To The Config
+        config.page.max_per_page = app.max_per_page;
+        config.data = app.data;
+        config.template = app.template;
+        config.builders = app.builders;
+        config.debug = app.debug;
 
         // Check That The User Config Is Valid
         // If True Run The App
         if (app.checkConfig(config)) {
+
+			//
+			// Add The Page Buttons
+			//
+
+			// Define The HTML Output
+			var btns_HTML = "";
+
+			// Loop For The Amount Of Pages
+			// Then Add To The Output HTML
+			for (var i=0;i<config.page.max_page_size();i++) {
+				btns_HTML += "<button onclick='gallery.select("+i+")'>"+i+"</button>";
+			}
+
+			// Add The Output HTML To The DOM
+			config.dom.controls.getElementsByClassName("page_btns")[0].innerHTML = btns_HTML;
+
             app.UpdateUI();
         }
     };
