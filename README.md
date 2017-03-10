@@ -3,20 +3,45 @@
 
 > Main File: js/gallery.js
 
+## HTML Setup
+```html
+<div id="gallery"></div>
+<script>
+
+    // Data In Array
+    var data = [
+        'http://example.com/image_1.jpg',
+        'http://example.com/image_2.jpg'
+    ];
+
+    // Get Instance Of Gallery
+    var gallery = new Gallery();
+
+    // Edit Config Here
+    // [START]
+    gallery.data = data;
+    gallery.max_per_page = 6;
+    // [END]
+
+    // Init The Gallery
+    gallery.init();
+</script>
+```
+
 ## Data
-> The Data Needs To Be An Object, With All The Data For Use In The Program
+> The Data Needs To Be An Array, With All The Data For Use In The Program
 
 ###### Simple Example
 ```javascript
-var data = {
+var data = [
     'http://example.com/image_1.jpg',
     'http://example.com/image_2.jpg'
-};
+];
 ```
 
 ###### Advanced Example
 ```javascript
-var data = {
+var data = [
     {
         'url': 'http://example.com/image_1.jpg',
         'caption': 'This Is An Image, That Is Number 1'
@@ -25,7 +50,7 @@ var data = {
         'url': 'http://example.com/image_2.jpg',
         'caption': 'This Is An Image, That Is Number 2'
     }
-};
+];
 ```
 
 ## Template
