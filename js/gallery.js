@@ -9,7 +9,7 @@
 
 // Function Gallery
 // This Is The Main Function Class
-function Gallery(data=null, template=null, builders=null, debug=true)
+function Gallery(data=[], template="", builders={}, debug=true)
 {
 
     // Define app as this;
@@ -77,7 +77,7 @@ function Gallery(data=null, template=null, builders=null, debug=true)
             // Check If Template Is A String
             // If True Chnage To Fucntion With Current String
             // Else Revert To Default
-            if (typeof config.template == 'string') {
+            if (typeof config.template == 'string' && config.template != "") {
 
                 // Set Template String
                 config.template_str = config.template;
@@ -104,7 +104,7 @@ function Gallery(data=null, template=null, builders=null, debug=true)
         // Then Check That It Returns Valid Data
         // By Check If It Return Different Id When Given Different Data
         if (typeof config.builders['id'] !=  'function') {
-            config.builders['id'] = function (index, data) { return '_' + Math.random().toString(36).substr(2, 9); };
+            config.builders['id'] = function (index, value) { return '_' + Math.random().toString(36).substr(2, 9); };
         }
 
         // Check That The Config Data Size Is Bigger Than 1
@@ -133,7 +133,7 @@ function Gallery(data=null, template=null, builders=null, debug=true)
 
         // Check URL Builder
         // If Not Valid Revert To Default
-        if (!typeof config.builders['url'] === 'function') {
+        if (typeof config.builders['url'] != 'function') {
             config.builders['url'] = function (index, data) { return data; };
         }
 
