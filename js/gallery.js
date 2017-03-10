@@ -3,6 +3,42 @@
 //
 //
 
+// Data
+// The Data Needs To Be An Object, With All The Data For Use In The Program
+//
+// Simple Example
+// var data = {
+//     'http://example.com/image_1.jpg',
+//     'http://example.com/image_2.jpg'
+// };
+//
+// Advanced Example
+// var data = {
+//     {
+//         'url': 'http://example.com/image_1.jpg',
+//         'caption': 'This Is An Image, That Is Number 1'
+//     },
+//     {
+//         'url': 'http://example.com/image_2.jpg',
+//         'caption': 'This Is An Image, That Is Number 2'
+//     }
+// };
+
+// Builders
+// All Builder Need To Have A index and value paramter || E.G. function (index, value) {}
+// All Builder Functions Need To Return A String To Import Into The Template
+//
+// index as int;        This Is The Index Of The Value In The Array
+// value as *;          This Is The Value Of The Data In The Array
+//
+// var builders = {
+//     'id': function (index, value) { return value.unique_id },
+// };
+//
+// Id Buidler   || Returns String, That Is Different For Each Data Point In The Array
+// URL Builder  || Returns String, The URL Of The Current Image
+//
+
 // Function Gallery
 // This Is The Main Function
 function Gallery(data=null, template=null, builders=null, debug=true)
@@ -46,19 +82,56 @@ function Gallery(data=null, template=null, builders=null, debug=true)
         console.log(config);
 
         // Check That The Config Is Defined
-        if (typeof config === 'undefined') {
+        if (!typeof config === 'object') {
             return app.raiseError("The Config Is Not Valid!", true);
         }
 
         // Check User Data
-        if (typeof config.data === 'undefined') {
+        if (!typeof config.data === 'object') {
             return app.raiseError("The Gallery Has Been Given No Data!", true);
         }
 
+        // Check The Template
+        // If Not Valid Revert To Default
+        if (!typeof config.template === 'function') {
+            config.template = function (index, value) {
+                return "<img class='img_wrap' src='{{ url }}' data-id='{{ id }}'>";
+            };
+        }
+
+        // Check The Id Builder
+        // Check The It Is A Function
+        // Then Check That It Returns Valid Data
+        // By Check If It Return Different Id When Given Different Data
+        if (!typeof config.builders['id'] ===  'function') {
+            config.builders['id'] = function (index, data) { return '_' + Math.random().toString(36).substr(2, 9); };
+        }
+
+        // Check That The Config Data Size Is Bigger Than 1
+        // If True Check The Id Function
+        if (config.data.length > 1) {
+
+            // Get The First Two Ids From The Data
+            // id[0] where data index = 0
+            // id[1] where data index = 1
+            var id=[
+                config.builders['id'](0, config.data[0]),
+                config.builders['id'](1, config.data[1]);
+            ];
+
+            // Check If The Ids Are The Same
+            // If True Then The Function Is Not Valid
+            // So We Will Log Error And Kill
+            if (id[0] == id[1]) {
+                return app.raiseError("The ID Builder Function Returned The Same Value For Two Different Images!", true);
+            }
+        }
+
+
         // Check URL Builder
         // If Not Valid Revert To Default
-        if (typeof config.builders['url'] === 'undefined') {
-            config.builders['url'] = function (index, data) { return data; }
+        if (!typeof config.builders['url'] === 'function') {
+            config.builders['url'] = function (index, data) { return data; };
         }
 
         // Return True
@@ -218,12 +291,12 @@ function Gallery(data=null, template=null, builders=null, debug=true)
 		}
 
 	};
-	
+
 	// Function Select
 	// Select The Next Page To Show
 	// For Use With Page Buttons
 	this.select = function (index) {
-	
+
 		// Check That The User Index Is Valid
 		// And Is In The Data Array
 		if (index != null && index < config.page.max_page_size() - 1) {
@@ -333,7 +406,7 @@ function Gallery(data=null, template=null, builders=null, debug=true)
 			//       Caption For Image
             // HTML With Injected Variables
             var data = {
-                'id':       '_' + Math.random().toString(36).substr(2, 9),
+                'id':       ,
             };
             var html = app.InjectHTML(data, imageIndex);
 
@@ -364,9 +437,9 @@ function Gallery(data=null, template=null, builders=null, debug=true)
         // For Loop
         // Loop Through The images_list And Add OnClick Functions
 		for (var i=0;i<images_list.length;i++) {
-			
+
 			images_list[i].style.height = "calc(( 1080 / 1920 ) * "+images_list[i].offsetHeight+")px";
-			
+
 			images_list[i].onclick = function () {
 
                 // Get The Image ID Of The Current Image
@@ -433,23 +506,23 @@ function Gallery(data=null, template=null, builders=null, debug=true)
         // Check That The User Config Is Valid
         // If True Run The App
         if (app.checkConfig(config)) {
-			
+
 			//
 			// Add The Page Buttons
 			//
-			
+
 			// Define The HTML Output
 			var output = "";
-			
+
 			// Loop For The Amount Of Pages
 			// Then Add To The Output HTML
 			for (var i=0;i<config.page.max_page_size();i++) {
 				output += "<button onclick='gallery.select("+i+")'>"+i+"</button>";
 			}
-			
+
 			// Add The Output HTML To The DOM
 			config.dom.controls.getElementsByClassName("page_btns")[0].innerHTML = output;
-			
+
             app.UpdateUI();
         }
     };
