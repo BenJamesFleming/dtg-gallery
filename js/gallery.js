@@ -24,6 +24,7 @@ function Gallery(data=null, template=null, builders=null, debug=true)
         },
         'dom': {
             'container':  document.getElementsByClassName('container')[0],
+			'controls': document.getElementsByClassName('controls')[0],
             'overlay':    document.getElementsByClassName('overlay')[0],
             'overlay_controls': document.getElementsByClassName('overlay_controls')[0],
             'buffer':     document.getElementsByClassName('buffer')[0],
@@ -98,7 +99,7 @@ function Gallery(data=null, template=null, builders=null, debug=true)
 
     // Fucntion Next
     // Load The Check Page
-    this.next = function () {
+    this.next = function (user_index=null) {
 
 		// Debug
 		app.log("Loading Next Page / Image...");
@@ -216,6 +217,21 @@ function Gallery(data=null, template=null, builders=null, debug=true)
 			return app.UpdateUI();
 		}
 
+	};
+	
+	// Function Select
+	// Select The Next Page To Show
+	// For Use With Page Buttons
+	this.select = function (index) {
+	
+		// Check That The User Index Is Valid
+		// And Is In The Data Array
+		if (index != null && index < config.page.max_page_size() - 1) {
+			// Set Config Index To The User Index;
+			// Then Run UpdateUI To Apply The Changes
+			config.page.index = index;
+			return app.UpdateUI();
+		}
 	};
 
     // Function Inject HTML
@@ -417,6 +433,23 @@ function Gallery(data=null, template=null, builders=null, debug=true)
         // Check That The User Config Is Valid
         // If True Run The App
         if (app.checkConfig(config)) {
+			
+			//
+			// Add The Page Buttons
+			//
+			
+			// Define The HTML Output
+			var output = "";
+			
+			// Loop For The Amount Of Pages
+			// Then Add To The Output HTML
+			for (var i=0;i<config.page.max_page_size();i++) {
+				output += "<button onclick='gallery.select("+i+")'>"+i+"</button>";
+			}
+			
+			// Add The Output HTML To The DOM
+			config.dom.controls.getElementsByClassName("page_btns")[0].innerHTML = output;
+			
             app.UpdateUI();
         }
     };
