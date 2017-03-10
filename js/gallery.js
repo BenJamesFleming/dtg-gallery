@@ -424,8 +424,6 @@ function Gallery(data=null, template=null, builders=null, debug=true)
         // Loop Through The images_list And Add OnClick Functions
 		for (var i=0;i<images_list.length;i++) {
 
-			images_list[i].style.height = "calc(( 1080 / 1920 ) * "+images_list[i].offsetHeight+")px";
-
 			images_list[i].onclick = function () {
 
                 // Get The Image ID Of The Current Image
@@ -515,6 +513,13 @@ function Gallery(data=null, template=null, builders=null, debug=true)
 			// Add The Output HTML To The DOM
 			config.dom.controls.getElementsByClassName("page_btns")[0].innerHTML = btns_HTML;
 
+            // Update The UI When The Window Is Resized
+            // To Keep The UI Looing Nice
+            window.addEventListener('resize', function(event){
+                app.UpdateUI();
+            });
+
+            // Update UI
             app.UpdateUI();
         }
     };
