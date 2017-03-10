@@ -1,5 +1,6 @@
 # Gallery
-> This Is A Gallery Project For School, **DTG3** \n
+> This Is A Gallery Project For School, **DTG3**
+
 > Main File: js/gallery.js
 
 ## Data
@@ -28,7 +29,9 @@ var data = {
 ```
 
 ## Builders
-> All Builder Need To Have A index and value parameters || E.G. function (index, value) {}
+> All Builder Need To Have A index and value parameters
+
+> E.G. function (index, value) {}
 
 > All Builder Functions Need To Return A String To Import Into The Template
 
@@ -39,16 +42,19 @@ var data = {
 
 #### How It Works
 
-> The Program Will Run The Each Builder \n
+> The Program Will Run The Each Builder
 > To Fill In The Templates Parameters
 
 ###### E.G.
 ```javascript
 var template = "<img data-id='{{ id }}' scr='{{ url }}'>";
 ```
-Where **{{ id }}** And **{{ url }}** Are The Parameters. \n
-The Template Will Find And Replace `"{{ id }}"` From The `template` Variable Above  \n
-With The Return Value Of `builders['id'](index, value);` , And Then Do The Same For All The Other Parameters That Have Builders \n
+Where **{{ id }}** And **{{ url }}** Are The Parameters.
+
+The Template Will Find And Replace `"{{ id }}"` From The `template` Variable Above
+
+With The Return Value Of `builders['id'](index, value);` , And Then Do The Same For All The Other Parameters That Have Builders
+
 ***(Parameters That Do Not Have Builders Will Simply Be Cleared From The Template)***
 
 ###### Simple Example
@@ -62,7 +68,8 @@ var builders = {
 ```
 
 ###### Advanced Example
-> This Example Shows How The Builders Could Be Used With A More Complex Data System \n
+> This Example Shows How The Builders Could Be Used With A More Complex Data System
+
 > *See The Advanced Data Example*
 
 ```javascript
@@ -73,13 +80,16 @@ var builders = {
 ```
 
 #### Default Types Of Builders
-> These Are Default And Do Not Need Setup For Basic Use \n
+> These Are Default And Do Not Need Setup For Basic Use
+
 > But Many Need Setup For More Advanced Use Cases
 
 * Id Buidler  
-    * Returns A String Value,\n That Is Different For Each Data Point In The Array
+    * Returns A String Value,
+    That Is Different For Each Data Point In The Array
 * URL Builder
-    * Returns A String Value,\n This Is The URL Of The Current Image
+    * Returns A String Value,
+    This Is The URL Of The Current Image
 
 ###### Code For Default Builders
 > This Is The Code That Will Be Used If These Builder Functions Are Not Defined
