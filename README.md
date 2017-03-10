@@ -50,11 +50,8 @@ var data = {
 var template = "<img data-id='{{ id }}' scr='{{ url }}'>";
 ```
 Where **{{ id }}** And **{{ url }}** Are The Parameters.
-
 The Template Will Find And Replace `"{{ id }}"` From The `template` Variable Above
-
 With The Return Value Of `builders['id'](index, value);` , And Then Do The Same For All The Other Parameters That Have Builders
-
 ***(Parameters That Do Not Have Builders Will Simply Be Cleared From The Template)***
 
 ###### Simple Example
@@ -85,11 +82,9 @@ var builders = {
 > But Many Need Setup For More Advanced Use Cases
 
 * Id Buidler  
-    * Returns A String Value,
-    That Is Different For Each Data Point In The Array
+    * Returns A String Value, That Is Different For Each Data Point In The Array
 * URL Builder
-    * Returns A String Value,
-    This Is The URL Of The Current Image
+    * Returns A String Value, This Is The URL Of The Current Image
 
 ###### Code For Default Builders
 > This Is The Code That Will Be Used If These Builder Functions Are Not Defined
