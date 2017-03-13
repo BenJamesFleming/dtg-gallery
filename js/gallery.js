@@ -302,7 +302,7 @@ function Gallery(data=[], template="", builders={}, debug=true)
 
 		// Check That The User Index Is Valid
 		// And Is In The Data Array
-		if (index != null && index < config.page.max_page_size()) {
+		if (index != null && index < config.page.max_page_size() && !index < 0) {
 			// Set Config Index To The User Index;
 			// Then Run UpdateUI To Apply The Changes
 			config.page.index = index;
@@ -346,19 +346,27 @@ function Gallery(data=[], template="", builders={}, debug=true)
         // Loop Through The Params
         // And Inject Them Into The Output HTML
         for (var i=0;i<params.length;i++) {
-
-            // The Value To Replace The Param
-            var value = "";
-
-            // Variables
+		
+			// Variables
             // param_trim
             var param_trim = params[i].trim();
 
-            /// Check For Builder
+            // Set The Value To Replace The Param
+			// If Debug Then The Log Error To User
+			if (config.debug == true) {
+				var value = "The Paramter {{ "+param_trim+" }} Has No Injectable Value!";
+			} else {
+				var value = "";
+			}
+
+            // Check For Builder
             // If True Load Value From Builder
+			// Else If The Data Value has The Param Load That
             if (typeof config.builders[param_trim] != 'undefined') {
-                var value = config.builders[param_trim](data.index, data.value);
-            }
+                value = config.builders[param_trim](data.index, data.value);
+            } else if (typeof data.value[param_trim] != 'undefined') {
+				value = data.value[param_trim];
+			}
 
             // Inject The Current Param
             output = output.replace(signals[0]+params[i]+signals[1], value);

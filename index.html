@@ -96,7 +96,7 @@
 			'url': function (index, value) { return "https://unsplash.it/1920/1080?image="+value.id; },
 			'url_s': function (index, value) { return "https://unsplash.it/100/56?blur&image="+value.id; },
 			'caption': function (index, value) { return value.caption; },
-			'height': function (index, value) { return "calc(( 1080 / 1920 ) * ( "+gallery.config.dom.container.offsetWidth+"px / 3 ))"; },
+			'height': function (index, value) { return "calc(( 1080 / 1920 ) * ( "+gallery.config.dom.container.offsetWidth+"px / 3 ))"; }
 		};
 
 		// Build The Template String With The ["{{", "}}"] Signals, To Show Where The Params Are
