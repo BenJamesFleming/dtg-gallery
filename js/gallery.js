@@ -365,7 +365,7 @@ function Gallery(data=[], template="", builders={}, debug=true)
             // If True Load Value From Builder
 			// Else If The Data Value has The Param Load That
             if (typeof config.builders[param_trim] != 'undefined') {
-                value = config.builders[param_trim](data.index, data.value);
+                value = config.builders[param_trim](app, data.index, data.value);
             } else if (typeof data.value[param_trim] != 'undefined') {
 				value = data.value[param_trim];
 			}
@@ -379,14 +379,22 @@ function Gallery(data=[], template="", builders={}, debug=true)
 
     };
 
+    // Function Clear UI
+    // Clears The UI So The App Can Reload It
+    this.ClearUI = function() {
+
+        config.dom.container.innerHTML = "";
+        config.dom.overlay.innerHTML = "";
+        config.dom.buffer.innerHTML = "";
+
+    };
+
     // Function Update UI
     // Updates The UI To Show The User The Correct Images
     this.UpdateUI = function () {
 
         // Clear The DOM Of The Previous Images
-        config.dom.container.innerHTML = "";
-		config.dom.overlay.innerHTML = "";
-		config.dom.buffer.innerHTML = "";
+        app.ClearUI();
 
 		// Debug
 		app.log("Updating UI...");
@@ -533,6 +541,17 @@ function Gallery(data=[], template="", builders={}, debug=true)
             // Update UI
             app.UpdateUI();
         }
+    };
+
+    // Function Kill
+    // Kill The App And Remove It From The DOM
+    this.kill = function() {
+
+        // Clear The DOM
+        // Then Delete The App
+        app.ClearUI();
+        delete this, app;
+
     };
 
     // return this to user
