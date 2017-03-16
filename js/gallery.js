@@ -17,7 +17,8 @@ function Gallery(data=[], template="", builders={}, debug=true)
 
     // Define User Editable Config
     // Max Per Page, The Max Images On A Page
-    this.max_per_page = 4;
+    this.max_per_page = 6;
+	this.max_per_line = 3;
     this.data = data;
     this.template = template;
     this.builders = builders;
@@ -46,9 +47,10 @@ function Gallery(data=[], template="", builders={}, debug=true)
         },
         'page': {
             'index': 0,
-    		'max_per_page': 8,
-            'buffer_number': 3,
-    		'max_page_size': function () {return Math.ceil(app.config.data.length / this['max_per_page']);}
+    		'max_per_page': 0,
+			'max_per_line': 0,
+            'buffer_number': this['max_per_page']*3,
+    		'max_page_size': function () { return Math.ceil(app.config.data.length / this['max_per_page']); }
         }
     };
     var config = this.config;
@@ -302,7 +304,7 @@ function Gallery(data=[], template="", builders={}, debug=true)
 
 		// Check That The User Index Is Valid
 		// And Is In The Data Array
-		if (index != null && index < config.page.max_page_size() && !index < 0) {
+		if (index != null && index < config.page.max_page_size()) {
 			// Set Config Index To The User Index;
 			// Then Run UpdateUI To Apply The Changes
 			config.page.index = index;
@@ -346,7 +348,7 @@ function Gallery(data=[], template="", builders={}, debug=true)
         // Loop Through The Params
         // And Inject Them Into The Output HTML
         for (var i=0;i<params.length;i++) {
-		
+
 			// Variables
             // param_trim
             var param_trim = params[i].trim();
@@ -406,7 +408,7 @@ function Gallery(data=[], template="", builders={}, debug=true)
 
 			// Check If The Max Per Page Has Been Reached
 			// If True Break The For Loop
-			if (i >= config.page.max_per_page*config.page.buffer_number) { break; }
+			if (i >= config.page.buffer_number) { break; }
 			if (i >= config.page.max_per_page) {
 				config.dom.buffer.innerHTML += html;
 				continue;
@@ -496,6 +498,7 @@ function Gallery(data=[], template="", builders={}, debug=true)
 
         // Add The User Edits To The Config
         config.page.max_per_page = app.max_per_page;
+		config.page.max_per_line = app.max_per_line;
         config.data = app.data;
         config.template = app.template;
         config.builders = app.builders;
