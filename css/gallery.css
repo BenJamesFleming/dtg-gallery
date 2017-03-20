@@ -1,0 +1,124 @@
+.gallery {
+    width: 100vw;
+    height: 100vh;
+    overflow-y: scroll;
+}
+.gallery>.buffer {display: none;}
+.gallery>.container {
+    max-width: 100%;
+    margin: 0 2vw;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-start;
+}
+.gallery>.container.hide {
+    overflow: hidden;
+    display: none;
+}
+.gallery>.container>.img_wrap {
+    margin: 10px;
+    width: calc(100% / 3 - 20px);
+    height: auto;
+	display: flex;
+	flex-direction: column;
+	align-content: center;
+	justify-content: center;
+    background-position: 50%;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+.gallery>.container>.img_wrap>img {
+	width: 100%;
+	height: auto;
+}
+.gallery>.container>.img_wrap>.caption{
+	font-family: 'PT Sans', sans-serif;
+	font-size: 25px;
+	color: #333;
+	background: rgba(255,255,255,0.2);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+.gallery>.overlay.show {
+    background: #eee;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: center;
+    align-items: center;
+}
+.gallery>.overlay>.img_wrap {
+    display: none;
+    width: 100%;
+    height: auto;
+}
+.gallery>.overlay>.img_wrap>img {
+	width: 100%;
+	height: auto;
+}
+.gallery>.overlay>.img_wrap.show {
+    display: block;
+}
+.gallery>.overlay_controls {
+    width: 100vw;
+    height: 100vh;
+    display: none;
+}
+.gallery>.overlay_controls.show {
+    display: block;
+}
+.gallery>.overlay_controls>button {
+    width: 20vh;
+    height: 20vh;
+    background: rgba(0,0,0,0.5);
+    border: none;
+    border-radius: 50%;
+    position: fixed;
+    left: calc(-20vh / 2 - 2vh);
+    top: calc(100vh / 2 - 10vh);
+    transition: all 0.1s ease-in-out;
+}
+.gallery>.overlay_controls>button>i {
+    font-size: 10rem;
+    color: #eee;
+    width: 20vh;
+    height: 20vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 38px;
+}
+.gallery>.overlay_controls>button:nth-child(1) {
+    left: calc(100vw - 20vh / 2 + 2vh);
+}
+.gallery>.overlay_controls>button:nth-child(1)>i {
+    margin-left: -50px;
+}
+.gallery>.overlay_controls>button:hover {
+    background: rgba(0,0,0,0.7);
+    left: calc(-20vh / 2);
+}
+.gallery>.overlay_controls>button:nth-child(1):hover {
+    left: calc(100vw - 20vh / 2);
+}
+.gallery>.controls {
+    padding: 10px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.gallery>.controls>button {
+    margin: 0 10px;
+}
+@media only screen  and (max-width : 1000px) {
+    .gallery>.container>img { width: calc(100% / 3 - 20px) }
+}
+@media only screen  and (max-width : 700px) {
+    .gallery>.container>img { width: calc(100% / 2 - 20px) }
+}

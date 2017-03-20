@@ -16,7 +16,7 @@ function Gallery(data=[], template="", builders={}, debug=true)
     var app = this;
 
     // Define User Editable Config
-    // Max Per Page, The Max Images On A Page
+	this.overlay_enable = true;
     this.max_per_page = 6;
 	this.max_per_line = 3;
     this.data = data;
@@ -27,6 +27,8 @@ function Gallery(data=[], template="", builders={}, debug=true)
     // Build The Config
     this.config = {
         'data': null,
+        'overlay_enable': null,
+        'html_default': null,
         'template': null,
         'template': null,
         'template_str': null,
@@ -39,6 +41,7 @@ function Gallery(data=[], template="", builders={}, debug=true)
             'index': 0
         },
         'dom': {
+            'gallery': null,
             'container':  document.getElementsByClassName('container')[0],
 			'controls': document.getElementsByClassName('controls')[0],
             'overlay':    document.getElementsByClassName('overlay')[0],
@@ -137,6 +140,12 @@ function Gallery(data=[], template="", builders={}, debug=true)
         // If Not Valid Revert To Default
         if (typeof config.builders['url'] != 'function') {
             config.builders['url'] = function (index, data) { return data; };
+        }
+
+        // Check HTML Default
+        // If Not Valid Kill App
+        if (typeof config.html_default == null) {
+            return app.raiseError("The HTML Default String Failed To Build!", true);
         }
 
         // Return True
@@ -384,8 +393,11 @@ function Gallery(data=[], template="", builders={}, debug=true)
     this.ClearUI = function() {
 
         config.dom.container.innerHTML = "";
-        config.dom.overlay.innerHTML = "";
         config.dom.buffer.innerHTML = "";
+
+        if (config.overlay_enable) {
+            config.dom.overlay.innerHTML = "";
+        }
 
     };
 
@@ -425,78 +437,83 @@ function Gallery(data=[], template="", builders={}, debug=true)
             // Add The Image To The Container
             // Then To The Overlay
             config.dom.container.innerHTML += html;
-            config.dom.overlay.innerHTML += html;
+
+            if (config.overlay_enable) {
+                config.dom.overlay.innerHTML += html;
+            }
 		}
 
         //
 		// Add On Click Events To All Images
         //
 
-        // Variables
-        // image_list as arr;       The Images In The Container Element
-        // images_overlay as arr;   The Images In The Overlay Element
-		var images_list =     config.dom.container.getElementsByClassName("img_wrap");
-		var images_overlay =  config.dom.overlay.getElementsByClassName("img_wrap");
+        if (config.overlay_enable) {
+            // Variables
+            // image_list as arr;       The Images In The Container Element
+            // images_overlay as arr;   The Images In The Overlay Element
+    		var images_list =     config.dom.container.getElementsByClassName("img_wrap");
+    		var images_overlay =  config.dom.overlay.getElementsByClassName("img_wrap");
 
-        // For Loop
-        // Loop Through The images_list And Add OnClick Functions
-		for (var i=0;i<images_list.length;i++) {
+            // For Loop
+            // Loop Through The images_list And Add OnClick Functions
+    		for (var i=0;i<images_list.length;i++) {
 
-			images_list[i].onclick = function () {
+    			images_list[i].onclick = function () {
 
-                // Get The Image ID Of The Current Image
-                // Loop Through The Overlay Images And Find A Match
-                // Change The Class Names To Make The CSS Show The Ovelay Image While
-                // Hiding All The Other Images
-				var imgID = this.getAttribute("data-id");
-				for (var j=0;j<images_overlay.length;j++) {
-					var overlayImgID = images_overlay[j].getAttribute("data-id");
-					if (imgID == overlayImgID) {
-                        config.overlay.in_overlay = true;
-                        config.overlay.index = j;
+                    // Get The Image ID Of The Current Image
+                    // Loop Through The Overlay Images And Find A Match
+                    // Change The Class Names To Make The CSS Show The Ovelay Image While
+                    // Hiding All The Other Images
+    				var imgID = this.getAttribute("data-id");
+    				for (var j=0;j<images_overlay.length;j++) {
+    					var overlayImgID = images_overlay[j].getAttribute("data-id");
+    					if (imgID == overlayImgID) {
+                            config.overlay.in_overlay = true;
+                            config.overlay.index = j;
 
-						images_overlay[j].className = "img_wrap show";
-						config.dom.overlay.className = "overlay show";
-						config.dom.overlay_controls.className = "overlay_controls show";
-						config.dom.container.className = "container hide";
-					}
-				}
+    						images_overlay[j].className = "img_wrap show";
+    						config.dom.overlay.className = "overlay show";
+    						config.dom.overlay_controls.className = "overlay_controls show";
+    						config.dom.container.className = "container hide";
+    					}
+    				}
 
-			};
-		}
+    			};
+    		}
 
-        // For Loop
-        // Loop Through The images_overlay And Add OnClick Fucntions
-        // To Make The Overlay Image Hiden And All The Other Images Shown
-		for (var i=0;i<images_overlay.length;i++) {
-			images_overlay[i].onclick = function () {
-                config.overlay.in_overlay = false;
+            // For Loop
+            // Loop Through The images_overlay And Add OnClick Fucntions
+            // To Make The Overlay Image Hiden And All The Other Images Shown
+    		for (var i=0;i<images_overlay.length;i++) {
+    			images_overlay[i].onclick = function () {
+                    config.overlay.in_overlay = false;
 
-				this.className = "img_wrap";
-				config.dom.overlay.className = "overlay";
-                config.dom.overlay_controls.className = "overlay_controls";
-				config.dom.container.className = "container show";
-			};
-		}
+    				this.className = "img_wrap";
+    				config.dom.overlay.className = "overlay";
+                    config.dom.overlay_controls.className = "overlay_controls";
+    				config.dom.container.className = "container show";
+    			};
+    		}
 
-        //
-        // Overlay Control
-        //
+            //
+            // Overlay Control
+            //
 
-        // Check If The Page Is In Overlay Mode
-        // If True Open Overlay
-        if (config.overlay.in_overlay == true) {
+            // Check If The Page Is In Overlay Mode
+            // If True Open Overlay
+            if (config.overlay.in_overlay == true) {
 
-            // Get The Overlay Image
-            // Then Add The Show Class To The Overlay Image
-            var images_overlay = config.dom.overlay.getElementsByClassName("img_wrap");
-            images_overlay[config.overlay.index].className = "show";
+                // Get The Overlay Image
+                // Then Add The Show Class To The Overlay Image
+                var images_overlay = config.dom.overlay.getElementsByClassName("img_wrap");
+                images_overlay[config.overlay.index].className = "show";
 
-            // Add The Class Names To The Divs Aswell
-            config.dom.overlay.className = "overlay show";
-            config.dom.overlay_controls.className = "overlay_controls show";
-            config.dom.container.className = "container hide";
+                // Add The Class Names To The Divs Aswell
+                config.dom.overlay.className = "overlay show";
+                config.dom.overlay_controls.className = "overlay_controls show";
+                config.dom.container.className = "container hide";
 
+            }
         }
     };
 
@@ -505,12 +522,48 @@ function Gallery(data=[], template="", builders={}, debug=true)
     this.init = function () {
 
         // Add The User Edits To The Config
+        config.overlay_enable = app.overlay_enable;
         config.page.max_per_page = app.max_per_page;
 		config.page.max_per_line = app.max_per_line;
         config.data = app.data;
         config.template = app.template;
         config.builders = app.builders;
         config.debug = app.debug;
+
+        // Get Gallery Elements
+        // This Is A Needed Element
+        config.dom.gallery = document.getElementsByClassName('gallery')[0];
+
+        // Build The Default HTML
+        //  [START]
+        html =  "<div class='container'></div>";
+        html += "<div class='buffer'></div>";
+        html += "<div class='controls'><button onclick='gallery.prev()'>Previous</button><div class='page_btns'></div><button onclick='gallery.next()'>Next</button></div>";
+        if (config.overlay_enable) {
+            html += "<div class='overlay'></div>";
+        }
+        config.html_default = html;
+        // [END]
+        config.dom.gallery.innerHTML = config.html_default;
+        // Load The HTML
+        // Check If The Gallery Has A ClassList
+        // If That Class List Container '--default'
+        // Then Set The Galery To The Default HTML
+        // [START]
+        if (gallery.classList) {
+            if (el.classList.contains('--default')) {
+                config.dom.gallery.innerHTML = config.html_default;
+            }
+        }
+        // [END]
+
+        // Load The DOM Elements
+        config.dom.container = document.getElementsByClassName('container')[0];
+        config.dom.controls = document.getElementsByClassName('controls')[0];
+        config.dom.buffer = document.getElementsByClassName('buffer')[0];
+        if (config.overlay_enable) {
+            config.dom.overlay = document.getElementsByClassName('overlay')[0];
+        }
 
         // Check That The User Config Is Valid
         // If True Run The App

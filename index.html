@@ -6,27 +6,15 @@
 	<link rel="icon" href="img/favicon.ico" type="image/x-icon">
 	<link href="https://fonts.googleapis.com/css?family=PT+Sans" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="css/gallery.css">
 	<link rel="stylesheet" type="text/css" href="css/main.css">
 </head>
 <body>
-	<div class="gallery">
-		<div class="label">
-			<h1 style="margin: 0;">Animal Gallery</h1><br>
-			<h3 style="color:#333;margin: -20px 0 0 0;">By Ben Fleming</h3>
-		</div>
-		<div class="container"></div>
-		<div class="overlay"></div>
-		<div class="overlay overlay_controls">
-			<button onclick="gallery.next()" ><i class="material-icons">&#xE315;</i></button>
-			<button onclick="gallery.prev()" ><i class="material-icons">&#xE314;</i></button>
-		</div>
-		<div class="controls">
-			<button onclick="gallery.prev()" >Previous</button>
-			<div class="page_btns"></div>
-			<button onclick="gallery.next()" >Next</button>
-		</div>
-		<div class="buffer"></div>
+	<div class="label">
+		<h1 style="margin: 0;">Animal Gallery</h1><br>
+		<h3 style="color:#333;margin: -20px 0 0 0;">By Ben Fleming</h3>
 	</div>
+	<div class="gallery --default"></div>
 	<script src="js/gallery.js"></script>
 	<script>
 
@@ -117,6 +105,7 @@
 	    gallery.data = data;
 		gallery.template = template;
 		gallery.builders = builders;
+		gallery.overlay_enable = false;
 		gallery.debug = true;
 	    gallery.max_per_page = 6;
 		gallery.max_per_line = 4;
