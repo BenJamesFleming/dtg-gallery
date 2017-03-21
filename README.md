@@ -63,13 +63,15 @@ var data = [
 
 > Use A String If You Don't Want Different HTML for Different Parts Of The page
 
-E.G. - default section, That Is What Gets Shown
-     - overlay section, That is What The Users Sees When They Click On An Image
+**E.G.**
+ * default section, That Is What Gets Shown
+ * overlay section, That is What The Users Sees When They Click On An Image
 
 > Use A Function If You Want More Controls Of What Gets Put In The DOM
 
-E.G. - default section, just show image
-     - overlay section, show image with caption, etc..
+**E.G.**
+ * default section, just show image
+ * overlay section, show image with caption, etc..
 
 ###### Simple Example
 ```javascript
