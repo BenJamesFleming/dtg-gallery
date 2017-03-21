@@ -79,6 +79,8 @@ This Example Has 4 Parameters `{{ id }}`, `{{ url_s }}`, `{{ url }}`, `{{ captio
 
 > All Builder Functions Need To Return A String To Import Into The Template
 
+> *Warning:* The Builder Keys `index`, `value` Are Restricted
+
 ###### Data Parsed Into Functions
 
  * index as **int**;        This Is The Index Of The Value In The Array

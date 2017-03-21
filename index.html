@@ -93,8 +93,16 @@
 		};
 
 		// Build The Template String With The ["{{", "}}"] Signals, To Show Where The Params Are
-		var template = "<div class='img_wrap' data-id='{{ id }}' style='background-image: url(\"{{ url_s }}\");min-height:{{ height }};width:{{ width }};'><img src='{{ url }}'><div class='caption'>{{ caption }}</div></div>";
-		var template_overlay = null;
+		var template = function (_g, state) {
+			var t = "<div class='img_wrap' data-id='{{ id }}' style='background-image: url(\"{{ url_s }}\");min-height:{{ height }};width:{{ width }};'><img src='{{ url }}'><div class='caption'>{{ caption }}</div></div>";
+			var t_basic = _g.config.template_default;
+
+			if (state == 'overlay') {
+				return t_basic;
+			}
+
+			return t;
+		};
 
 		// Get Instance Of Gallery
 	    var gallery = new Gallery();
@@ -105,8 +113,8 @@
 	    gallery.data = data;
 		gallery.template = template;
 		gallery.builders = builders;
-		gallery.overlay_enable = false;
-		gallery.debug = true;
+		gallery.overlay_enable = true;
+		gallery.debug = false;
 	    gallery.max_per_page = 6;
 		gallery.max_per_line = 4;
 	    // [END]

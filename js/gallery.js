@@ -30,7 +30,6 @@ function Gallery(data=[], template="", builders={}, debug=true)
         'overlay_enable': null,
         'html_default': null,
         'template': null,
-        'template': null,
         'template_str': null,
         'template_default': "<img class='img_wrap' src='{{ url }}' data-id='{{ id }}'>",
         'builders': null,
@@ -42,11 +41,10 @@ function Gallery(data=[], template="", builders={}, debug=true)
         },
         'dom': {
             'gallery': null,
-            'container':  document.getElementsByClassName('container')[0],
-			'controls': document.getElementsByClassName('controls')[0],
-            'overlay':    document.getElementsByClassName('overlay')[0],
-            'overlay_controls': document.getElementsByClassName('overlay_controls')[0],
-            'buffer':     document.getElementsByClassName('buffer')[0],
+            'container': null,
+			'controls': null,
+            'overlay': null,
+            'buffer': null,
         },
         'page': {
             'index': 0,
@@ -88,13 +86,13 @@ function Gallery(data=[], template="", builders={}, debug=true)
                 config.template_str = config.template;
 
                 // Change To Function
-                config.template = function (index, value) {
+                config.template = function (_g, state) {
                     return config.template_str;
                 };
             } else {
 
                 // Revert To Default
-                config.template = function (index, value) {
+                config.template = function (_g, state) {
                     return config.template_default;
                 };
             }
@@ -144,9 +142,15 @@ function Gallery(data=[], template="", builders={}, debug=true)
 
         // Check HTML Default
         // If Not Valid Kill App
-        if (typeof config.html_default == null) {
+        if (typeof config.html_default == 'undefined') {
             return app.raiseError("The HTML Default String Failed To Build!", true);
         }
+
+        // Check That The HTML Is Vaild
+        // If Not Valid Kill App
+		if (typeof config.dom.controls == 'undefined') {
+			return app.raiseError("The HTML Did Not Load Correctly, Please Check The Documentation!", true);
+		}
 
         // Return True
         // Because The Config Is Valid
@@ -323,12 +327,12 @@ function Gallery(data=[], template="", builders={}, debug=true)
 
     // Function Inject HTML
     // Inject The Data Into The Template
-    this.InjectHTML = function (data) {
+    this.InjectHTML = function (data, state) {
 
         var signals = ["{{", "}}"];
         var params = [];
         var index = 0;
-        var tmp_template = config.template(data.index, data.value);
+        var tmp_template = config.template(app, state);
         var output = tmp_template;
 
         // Get All The Params From The Template
@@ -373,7 +377,9 @@ function Gallery(data=[], template="", builders={}, debug=true)
             // Check For Builder
             // If True Load Value From Builder
 			// Else If The Data Value has The Param Load That
-            if (typeof config.builders[param_trim] != 'undefined') {
+            if (typeof data[param_trim] != 'undefined') {
+                value = data[param_trim];
+            } else if (typeof config.builders[param_trim] != 'undefined') {
                 value = config.builders[param_trim](app, data.index, data.value);
             } else if (typeof data.value[param_trim] != 'undefined') {
 				value = data.value[param_trim];
@@ -422,33 +428,41 @@ function Gallery(data=[], template="", builders={}, debug=true)
             // If True Break The For Loop
             if (imageIndex >= config.data.length) { break; }
 
-            // HTML
-            // This Is The Formatted HTML TO Add To The
-            var html = app.InjectHTML({'index': imageIndex, 'value': config.data[imageIndex]});
+            // Build Data
+            // That The Teplate Will Use
+            var t_data = {
+                'index': imageIndex,
+                'value': config.data[imageIndex]
+            }
+
+            // Get The ID For This Image
+            // Then Update The t_data
+            t_data['id'] = config.builders['id'](t_data);
 
 			// Check If The Max Per Page Has Been Reached
 			// If True Break The For Loop
 			if (i >= config.page.buffer_number) { break; }
 			if (i >= config.page.max_per_page) {
-				config.dom.buffer.innerHTML += html;
+				config.dom.buffer.innerHTML += app.InjectHTML(t_data, 'buffer');
 				continue;
 			}
 
             // Add The Image To The Container
-            // Then To The Overlay
-            config.dom.container.innerHTML += html;
-
+            // Then To The Overlay If It Is Enabled
+			// [START]
+            config.dom.container.innerHTML += app.InjectHTML(t_data, 'default');
             if (config.overlay_enable) {
-                config.dom.overlay.innerHTML += html;
+                config.dom.overlay.innerHTML += app.InjectHTML(t_data, 'overlay');
             }
+			// [END]
 		}
 
-        //
 		// Add On Click Events To All Images
-        //
-
+        // If Overlay Enabled Is True
+		// [START]
         if (config.overlay_enable) {
-            // Variables
+
+			// Variables
             // image_list as arr;       The Images In The Container Element
             // images_overlay as arr;   The Images In The Overlay Element
     		var images_list =     config.dom.container.getElementsByClassName("img_wrap");
@@ -473,7 +487,7 @@ function Gallery(data=[], template="", builders={}, debug=true)
 
     						images_overlay[j].className = "img_wrap show";
     						config.dom.overlay.className = "overlay show";
-    						config.dom.overlay_controls.className = "overlay_controls show";
+    						// config.dom.overlay_controls.className = "overlay_controls show";
     						config.dom.container.className = "container hide";
     					}
     				}
@@ -490,7 +504,7 @@ function Gallery(data=[], template="", builders={}, debug=true)
 
     				this.className = "img_wrap";
     				config.dom.overlay.className = "overlay";
-                    config.dom.overlay_controls.className = "overlay_controls";
+                    // config.dom.overlay_controls.className = "overlay_controls";
     				config.dom.container.className = "container show";
     			};
     		}
@@ -538,52 +552,56 @@ function Gallery(data=[], template="", builders={}, debug=true)
         //  [START]
         html =  "<div class='container'></div>";
         html += "<div class='buffer'></div>";
-        html += "<div class='controls'><button onclick='gallery.prev()'>Previous</button><div class='page_btns'></div><button onclick='gallery.next()'>Next</button></div>";
+        html += "<div class='controls'><button onclick='window._g.prev()'>Previous</button><div class='page_btns'></div><button onclick='window._g.next()'>Next</button></div>";
         if (config.overlay_enable) {
             html += "<div class='overlay'></div>";
         }
         config.html_default = html;
         // [END]
-        config.dom.gallery.innerHTML = config.html_default;
+
         // Load The HTML
         // Check If The Gallery Has A ClassList
         // If That Class List Container '--default'
         // Then Set The Galery To The Default HTML
         // [START]
-        if (gallery.classList) {
-            if (el.classList.contains('--default')) {
+        if (config.dom.gallery.classList) {
+            if (config.dom.gallery.classList.contains('--default')) {
                 config.dom.gallery.innerHTML = config.html_default;
             }
         }
         // [END]
 
         // Load The DOM Elements
+        // Load The Container Element
+        // Load The Controls Element
+        // Load The Buffer
+        // Load The Overlay Only If The Overlay Is Enabled
+        // [START]
         config.dom.container = document.getElementsByClassName('container')[0];
         config.dom.controls = document.getElementsByClassName('controls')[0];
         config.dom.buffer = document.getElementsByClassName('buffer')[0];
         if (config.overlay_enable) {
             config.dom.overlay = document.getElementsByClassName('overlay')[0];
         }
+        // [END]
 
         // Check That The User Config Is Valid
         // If True Run The App
         if (app.checkConfig(config)) {
 
-			//
 			// Add The Page Buttons
-			//
-
-			// Define The HTML Output
-			var btns_HTML = "";
-
+            // Check If There Is A Page Btns Element
+            // Define The HTML Output
+            // Then Add The Output HTML To The DOM
+			// [START]
+            var btns_HTML = "";
 			// Loop For The Amount Of Pages
 			// Then Add To The Output HTML
 			for (var i=0;i<config.page.max_page_size();i++) {
-				btns_HTML += "<button onclick='gallery.select("+i+")'>"+i+"</button>";
+				btns_HTML += "<button onclick='window._g.select("+i+")'>"+i+"</button>";
 			}
-
-			// Add The Output HTML To The DOM
 			config.dom.controls.getElementsByClassName("page_btns")[0].innerHTML = btns_HTML;
+            // [END]
 
             // Update The UI When The Window Is Resized
             // To Keep The UI Looing Nice
@@ -603,9 +621,13 @@ function Gallery(data=[], template="", builders={}, debug=true)
         // Clear The DOM
         // Then Delete The App
         app.ClearUI();
-        delete this, app;
+        delete this, app, window._g;
 
     };
+
+    // Add This To The window
+    // So We Can Call Functions From The DOM
+    window._g = this;
 
     // return this to user
     return this;

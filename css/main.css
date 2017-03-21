@@ -1,5 +1,5 @@
 * {
-    overflow: hidden;
+    overflow: auto;
 }
 body {
     display: flex;
