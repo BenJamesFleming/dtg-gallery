@@ -5,7 +5,7 @@
 
 ## HTML Setup
 ```html
-<div id="gallery"></div>
+<div id="gallery --default"></div>
 <script>
 
     // Data In Array
@@ -55,6 +55,17 @@ var data = [
 
 ## Template
 > The Template Can Be And Function Or A String
+> The Function Takes Two Parameters, `_g` and `state`
+> `_g` This Is The Gallery Object, So You Can Access The Config
+> `state` This Is The State That The Gallery Is In. **E.G.** *'default'* or *'overlay'* or *'buffer'*
+
+> Use A String If You Don't Want Different HTML for Different Parts Of The page
+> E.G. - default section, That Is What Gets Shown
+>      - overlay section, That is What The Users Sees When They Click On An Image
+
+> Use A Function If You Want More Controls Of What Gets Put In The DOM
+> E.G. - default section, just show image
+>      - overlay section, show image with caption, etc..
 
 ###### Simple Example
 ```javascript
@@ -65,8 +76,15 @@ This Example Has 2 Parameters `{{ id }}`, `{{ url }}`.
 
 ###### Advanced Example
 ```javascript
-var template = function (index, value) {
-    return "<div class='img_wrap' data-id='{{ id }}' style='background-image: url(\"{{ url_s }}\")'><img src='{{ url }}'><div class='caption'>{{ caption }}</div></div>";
+var template = function (_g, state) {
+    var t_default = "<div class='img_wrap' data-id='{{ id }}' style='background-image: url(\"{{ url_s }}\");min-height:{{ height }};width:{{ width }};'><img src='{{ url }}'><div class='caption'>{{ caption }}</div></div>";
+    var t_basic = _g.config.template_default;
+
+    if (state == 'overlay') {
+        return t_basic;
+    }
+
+    return t_default;
 };
 ```
 
@@ -75,7 +93,7 @@ This Example Has 4 Parameters `{{ id }}`, `{{ url_s }}`, `{{ url }}`, `{{ captio
 ## Builders
 > All Builder Need To Have A index and value parameters
 
-> E.G. function (index, value) {}
+> E.G. `function (_g, index, value) {}`
 
 > All Builder Functions Need To Return A String To Import Into The Template
 
@@ -83,6 +101,7 @@ This Example Has 4 Parameters `{{ id }}`, `{{ url_s }}`, `{{ url }}`, `{{ captio
 
 ###### Data Parsed Into Functions
 
+ * \_g as **Gallery**;      This Is The Gallery Object, With The Config
  * index as **int**;        This Is The Index Of The Value In The Array
  * value as **anything**;   This Is The Value Of The Data In The Array
 
