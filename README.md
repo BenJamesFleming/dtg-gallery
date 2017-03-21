@@ -56,16 +56,20 @@ var data = [
 ## Template
 > The Template Can Be And Function Or A String
 > The Function Takes Two Parameters, `_g` and `state`
+
 > `_g` This Is The Gallery Object, So You Can Access The Config
+
 > `state` This Is The State That The Gallery Is In. **E.G.** *'default'* or *'overlay'* or *'buffer'*
 
 > Use A String If You Don't Want Different HTML for Different Parts Of The page
-> E.G. - default section, That Is What Gets Shown
->      - overlay section, That is What The Users Sees When They Click On An Image
+
+E.G. - default section, That Is What Gets Shown
+     - overlay section, That is What The Users Sees When They Click On An Image
 
 > Use A Function If You Want More Controls Of What Gets Put In The DOM
-> E.G. - default section, just show image
->      - overlay section, show image with caption, etc..
+
+E.G. - default section, just show image
+     - overlay section, show image with caption, etc..
 
 ###### Simple Example
 ```javascript
@@ -157,7 +161,7 @@ var builders = {
 
 ```javascript
 var builders = {
-    'id': function (index, value) { return index; },
+    'id': function (index, value) { return '_' + Math.random().toString(36).substr(2, 9); },
     'url': function (index, value) { return value; },
 };
 ```
