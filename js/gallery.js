@@ -16,7 +16,7 @@ function Gallery(data=[], template="", builders={}, debug=true)
     var app = this;
 
     // Define User Editable Config
-	this.overlay_enable = true;
+	this.overlay_enabled = true;
     this.max_per_page = 6;
 	this.max_per_line = 3;
     this.data = data;
@@ -27,14 +27,15 @@ function Gallery(data=[], template="", builders={}, debug=true)
     // Build The Config
     this.config = {
         'data': null,
-        'overlay_enable': null,
         'html_default': null,
         'template': null,
         'template_str': null,
         'template_default': "<img class='img_wrap' src='{{ url }}' data-id='{{ id }}'>",
         'builders': null,
         'debug': null,
+        'state': 'default',
         'overlay': {
+            'enabled': null,
             'in_overlay': false,
             'index_old': 0,
             'index': 0
@@ -44,7 +45,7 @@ function Gallery(data=[], template="", builders={}, debug=true)
             'container': null,
 			'controls': null,
             'overlay': null,
-            'buffer': null,
+            'buffer': null
         },
         'page': {
             'index': 0,
@@ -335,6 +336,9 @@ function Gallery(data=[], template="", builders={}, debug=true)
         var tmp_template = config.template(app, state);
         var output = tmp_template;
 
+        var _state = state;
+        config.state = state;
+
         // Get All The Params From The Template
         while (true) {
 
@@ -389,6 +393,8 @@ function Gallery(data=[], template="", builders={}, debug=true)
             output = output.replace(signals[0]+params[i]+signals[1], value);
         }
 
+        config.state = _state;
+
         // Return The Injected HTML
         return output;
 
@@ -401,7 +407,7 @@ function Gallery(data=[], template="", builders={}, debug=true)
         config.dom.container.innerHTML = "";
         config.dom.buffer.innerHTML = "";
 
-        if (config.overlay_enable) {
+        if (config.overlay.enabled) {
             config.dom.overlay.innerHTML = "";
         }
 
@@ -451,7 +457,7 @@ function Gallery(data=[], template="", builders={}, debug=true)
             // Then To The Overlay If It Is Enabled
 			// [START]
             config.dom.container.innerHTML += app.InjectHTML(t_data, 'default');
-            if (config.overlay_enable) {
+            if (config.overlay.enabled) {
                 config.dom.overlay.innerHTML += app.InjectHTML(t_data, 'overlay');
             }
 			// [END]
@@ -460,7 +466,7 @@ function Gallery(data=[], template="", builders={}, debug=true)
 		// Add On Click Events To All Images
         // If Overlay Enabled Is True
 		// [START]
-        if (config.overlay_enable) {
+        if (config.overlay.enabled) {
 
 			// Variables
             // image_list as arr;       The Images In The Container Element
@@ -483,11 +489,11 @@ function Gallery(data=[], template="", builders={}, debug=true)
     					var overlayImgID = images_overlay[j].getAttribute("data-id");
     					if (imgID == overlayImgID) {
                             config.overlay.in_overlay = true;
+                            config.state = 'overlay';
                             config.overlay.index = j;
 
     						images_overlay[j].className = "img_wrap show";
     						config.dom.overlay.className = "overlay show";
-    						// config.dom.overlay_controls.className = "overlay_controls show";
     						config.dom.container.className = "container hide";
     					}
     				}
@@ -501,10 +507,10 @@ function Gallery(data=[], template="", builders={}, debug=true)
     		for (var i=0;i<images_overlay.length;i++) {
     			images_overlay[i].onclick = function () {
                     config.overlay.in_overlay = false;
+                    config.state = 'default';
 
     				this.className = "img_wrap";
     				config.dom.overlay.className = "overlay";
-                    // config.dom.overlay_controls.className = "overlay_controls";
     				config.dom.container.className = "container show";
     			};
     		}
@@ -520,11 +526,10 @@ function Gallery(data=[], template="", builders={}, debug=true)
                 // Get The Overlay Image
                 // Then Add The Show Class To The Overlay Image
                 var images_overlay = config.dom.overlay.getElementsByClassName("img_wrap");
-                images_overlay[config.overlay.index].className = "show";
+                images_overlay[config.overlay.index].className = "img_wrap show";
 
                 // Add The Class Names To The Divs Aswell
                 config.dom.overlay.className = "overlay show";
-                config.dom.overlay_controls.className = "overlay_controls show";
                 config.dom.container.className = "container hide";
 
             }
@@ -536,7 +541,7 @@ function Gallery(data=[], template="", builders={}, debug=true)
     this.init = function () {
 
         // Add The User Edits To The Config
-        config.overlay_enable = app.overlay_enable;
+        config.overlay.enabled = app.overlay_enabled;
         config.page.max_per_page = app.max_per_page;
 		config.page.max_per_line = app.max_per_line;
         config.data = app.data;
@@ -553,7 +558,7 @@ function Gallery(data=[], template="", builders={}, debug=true)
         html =  "<div class='container'></div>";
         html += "<div class='buffer'></div>";
         html += "<div class='controls'><button onclick='window._g.prev()'>Previous</button><div class='page_btns'></div><button onclick='window._g.next()'>Next</button></div>";
-        if (config.overlay_enable) {
+        if (config.overlay.enabled) {
             html += "<div class='overlay'></div>";
         }
         config.html_default = html;
@@ -580,7 +585,7 @@ function Gallery(data=[], template="", builders={}, debug=true)
         config.dom.container = document.getElementsByClassName('container')[0];
         config.dom.controls = document.getElementsByClassName('controls')[0];
         config.dom.buffer = document.getElementsByClassName('buffer')[0];
-        if (config.overlay_enable) {
+        if (config.overlay.enabled) {
             config.dom.overlay = document.getElementsByClassName('overlay')[0];
         }
         // [END]

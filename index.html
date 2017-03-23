@@ -87,17 +87,21 @@
 		var builders = {
 			'url': function (_g, index, value) { return "https://unsplash.it/1920/1080?image="+value.id; },
 			'url_s': function (_g, index, value) { return "https://unsplash.it/100/56?blur&image="+value.id; },
-			'caption': function (_g, index, value) { return value.caption; },
+			'caption': function (_g, index, value) { return (value.caption.length <= 16 || _g.config.state == 'overlay' ? value.caption : value.caption.substr(0, 16) + '...'); },
+			'oringal_size': function (_g, index, value) { return "1920px x 1080px"; },
 			'height': function (_g, index, value) { return "calc(( 1080 / 1920 ) * ( "+_g.config.dom.container.offsetWidth+"px / "+_g.config.page.max_per_line+" ))"; },
-			'width': function (_g, index, value) {return "calc( 100% / "+_g.config.page.max_per_line+" - 20px )"; }
+			'width': function (_g, index, value) { return "calc( 100% / "+_g.config.page.max_per_line+" - 20px )"; },
 		};
 
 		// Build The Template String With The ["{{", "}}"] Signals, To Show Where The Params Are
 		var template = function (_g, state) {
 			var t = "<div class='img_wrap' data-id='{{ id }}' style='background-image: url(\"{{ url_s }}\");min-height:{{ height }};width:{{ width }};'><img src='{{ url }}'><div class='caption'>{{ caption }}</div></div>";
+			var t_overlay = "<div class='img_wrap overlay_img' data-id='{{ id }}' style='background-image: url({{ url_s }});'><img style='background-image:url({{ url }});'><div class='img_info'><label class='caption'>{{ caption }}</label><div class='label_group vertical'><label class='size'>{{ oringal_size }}</label><label class='author'>Provided By <a href='http://unsplash.it/' target='_blank'>unsplash.it/</a></label></div></div></div>";
 			var t_basic = _g.config.template_default;
 
 			if (state == 'overlay') {
+				return t_overlay;
+			} else if (state == 'buffer') {
 				return t_basic;
 			}
 
@@ -113,8 +117,8 @@
 	    gallery.data = data;
 		gallery.template = template;
 		gallery.builders = builders;
-		gallery.overlay_enable = true;
-		gallery.debug = false;
+		gallery.overlay_enabled = true;
+		gallery.debug = true;
 	    gallery.max_per_page = 6;
 		gallery.max_per_line = 4;
 	    // [END]
@@ -122,6 +126,41 @@
 	    // Finally Run The Gallery To Save The Config
 		// And Start The UI
 	    gallery.init();
+
+		var Key = {
+		  LEFT:   37,
+		  RIGHT:  39
+		};
+
+	/**
+	 * old IE: attachEvent
+	 * Firefox, Chrome, or modern browsers: addEventListener
+	 */
+	function _addEventListener(evt, element, fn) {
+	  if (window.addEventListener) {
+	    element.addEventListener(evt, fn, false);
+	  }
+	  else {
+	    element.attachEvent('on'+evt, fn);
+	  }
+	}
+
+	function handleKeyboardEvent(evt) {
+	  if (!evt) {evt = window.event;} // for old IE compatible
+	  var keycode = evt.keyCode || evt.which; // also for cross-browser compatible
+
+	  var info = document.getElementById("info");
+	  switch (keycode) {
+	    case Key.LEFT:
+	      gallery.prev()
+	      break;
+	    case Key.RIGHT:
+	      gallery.next();
+	      break;
+	  }
+	}
+
+	_addEventListener('keydown', document, handleKeyboardEvent);
 	</script>
 </body>
 </html>

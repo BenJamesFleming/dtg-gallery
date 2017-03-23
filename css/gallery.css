@@ -62,7 +62,7 @@
 	height: auto;
 }
 .gallery>.overlay>.img_wrap.show {
-    display: block;
+    display: flex;
 }
 .gallery>.overlay_controls {
     width: 100vw;
