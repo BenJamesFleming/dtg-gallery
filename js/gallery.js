@@ -23,6 +23,12 @@ function Gallery(data=[], template="", builders={}, debug=true)
     this.template = template;
     this.builders = builders;
     this.debug = debug;
+	this.resizeValues = [
+		[320, 1],
+		[720, 2],
+        [1024, 3],
+        [99999999999999999, 4],
+	];
 
     // Build The Config
     this.config = {
@@ -588,6 +594,32 @@ function Gallery(data=[], template="", builders={}, debug=true)
         if (config.overlay.enabled) {
             config.dom.overlay = document.getElementsByClassName('overlay')[0];
         }
+        // [END]
+
+        // Check That The Max Per Line Is null
+        // If True Run The GalleryResizeFunction Every Time
+        // The Gallery Is Resized
+        // This Function Sets The Correct max_per_line
+        // For The Current Page Width
+        // [START]
+        if (config.page.max_per_line == null) {
+            var GalleryResizeFunction = function (event) {
+                var width = screen.width;
+                console.log(width);
+                for (var i=0;i<app.resizeValues.length;i++) {
+                    console.log(width, ">", app.resizeValues[i][0]);
+                    if (width < app.resizeValues[i][0]) {
+                        config.page.max_per_line = app.resizeValues[i][1];
+                        break;
+                    }
+                }
+                if (config.page.max_per_line == null) {
+                    app.raiseError("The Configered app.resizeValues Does Not Work With Current Width! Setting app.max_per_line = 2", false);
+                    config.page.max_per_line = 2; }
+            };
+			window.addEventListener('resize', GalleryResizeFunction, false);
+            GalleryResizeFunction(null);
+		}
         // [END]
 
         // Check That The User Config Is Valid
