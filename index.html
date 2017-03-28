@@ -132,35 +132,35 @@
 		  RIGHT:  39
 		};
 
-	/**
-	 * old IE: attachEvent
-	 * Firefox, Chrome, or modern browsers: addEventListener
-	 */
-	function _addEventListener(evt, element, fn) {
-	  if (window.addEventListener) {
-	    element.addEventListener(evt, fn, false);
-	  }
-	  else {
-	    element.attachEvent('on'+evt, fn);
-	  }
-	}
+		/**
+		 * old IE: attachEvent
+		 * Firefox, Chrome, or modern browsers: addEventListener
+		 */
+		function _addEventListener(evt, element, fn) {
+		  if (window.addEventListener) {
+		    element.addEventListener(evt, fn, false);
+		  }
+		  else {
+		    element.attachEvent('on'+evt, fn);
+		  }
+		}
 
-	function handleKeyboardEvent(evt) {
-	  if (!evt) {evt = window.event;} // for old IE compatible
-	  var keycode = evt.keyCode || evt.which; // also for cross-browser compatible
+		function handleKeyboardEvent(evt) {
+		  if (!evt) {evt = window.event;} // for old IE compatible
+		  var keycode = evt.keyCode || evt.which; // also for cross-browser compatible
 
-	  var info = document.getElementById("info");
-	  switch (keycode) {
-	    case Key.LEFT:
-	      gallery.prev()
-	      break;
-	    case Key.RIGHT:
-	      gallery.next();
-	      break;
-	  }
-	}
+		  var info = document.getElementById("info");
+		  switch (keycode) {
+		    case Key.LEFT:
+		      gallery.prev()
+		      break;
+		    case Key.RIGHT:
+		      gallery.next();
+		      break;
+		  }
+		}
 
-	_addEventListener('keydown', document, handleKeyboardEvent);
+		_addEventListener('keydown', document, handleKeyboardEvent);
 	</script>
 </body>
 </html>

@@ -604,7 +604,7 @@ function Gallery(data=[], template="", builders={}, debug=true)
         // [START]
         if (config.page.max_per_line == null) {
             var GalleryResizeFunction = function (event) {
-                var width = screen.width;
+                var width = window.innerWidth;
                 console.log(width);
                 for (var i=0;i<app.resizeValues.length;i++) {
                     console.log(width, ">", app.resizeValues[i][0]);
