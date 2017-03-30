@@ -134,7 +134,7 @@
 	        // [START]
 	        if (_gallery.page.max_per_line == null) {
 	            var GalleryResizeFunction = function (event) {
-	                var width = window.innerWidth;
+	                var width = screen.width;
 	                for (var i=0;i<_gallery.page.resizeValues.length;i++) {
 	                    if (width < _gallery.page.resizeValues[i][0]) {
 	                        _gallery.page.max_per_line = _gallery.page.resizeValues[i][1];
@@ -195,7 +195,7 @@
 			'max_per_line': null,
 			'max_page_size': function () { return Math.ceil(gallery.data.length / this['max_per_page']); },
 			'resizeValues': [
-				[320, 1],
+				[420, 1],
 				[720, 2],
 		        [1024, 3],
 		        [99999999999999999, 4]
