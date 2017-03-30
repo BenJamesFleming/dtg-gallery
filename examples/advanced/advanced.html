@@ -1,0 +1,242 @@
+</html>
+	<head>
+		<title>Animal Gallery</title>
+		<link rel="stylesheet" type="text/css" href="css/gallery.css">
+		<link rel="stylesheet" href="css/main.css">
+		<link href="https://fonts.googleapis.com/css?family=PT+Sans" rel="stylesheet">
+	</head>
+	<body>
+		<div class="label">
+			<h1 style="margin: 0;">Animal Gallery</h1><br>
+			<h3 style="color:#333;margin: -20px 0 0 0;">By Ben Fleming</h3>
+		</div>
+		<link href="https://fonts.googleapis.com/css?family=PT+Sans" rel="stylesheet">
+		<div class="gallery">
+			<div class="container"></div>
+			<div class="buffer"></div>
+		</div>
+		<script src="../../js/gallery.v2.js"></script>
+		<script>
+
+		var data = [
+			{
+				'id': '1084',
+				'caption': 'Seal'
+			},{
+				'id': '1074',
+				'caption': 'Tiger'
+			},{
+				'id': '1062',
+				'caption': 'Puppy Dog'
+			},{
+				'id': '1024',
+				'caption': 'America'
+			},{
+				'id': '1020',
+				'caption': 'Canada'
+			},{
+				'id': '1003',
+				'caption': 'Dear #1'
+			},{
+				'id': '943',
+				'caption': 'Dear #2'
+			},{
+				'id': '881',
+				'caption': 'Sea Land'
+			},{
+				'id': '790',
+				'caption': 'Dear #3'
+			},{
+				'id': '783',
+				'caption': 'Monkey? Baboon?'
+			},{
+				'id': '718',
+				'caption': 'Big Puppy Dog'
+			},{
+				'id': '659',
+				'caption': 'Dusty'
+			},{
+				'id': '593',
+				'caption': 'King Ezekiel'
+			},{
+				'id': '582',
+				'caption': 'Puppy Dog #2'
+			},{
+				'id': '433',
+				'caption': 'Care Bear'
+			},{
+				'id': '237',
+				'caption': 'Black Sheep'
+			},{
+				'id': '219',
+				'caption': 'P p p poker face, p p p poker face'
+			}
+		];
+
+		// Get The TemplateEngine Class
+		// And Insert Data Into It
+		var gallery = new TemplateEngine(data);
+
+		// Set The Template
+		// For Each Item
+		gallery.template = function () {
+			return "<div class='img_wrap' data-id='{{ id }}' style='background-image: url(\"{{ url_s }}\");min-height:{{ height }};width:{{ width }};'><img src='{{ url }}'><div class='caption'>{{ caption }}</div></div>";
+		};
+
+		// Add The Builders
+		// To Insert The Data Into The Template
+		// [START]
+		gallery.addBuilder('url', function (_gallery, index, value) { return "http://unsplash.it/1920/1080?image="+value.id; });
+		gallery.addBuilder('url_s', function (_gallery, index, value) { return "https://unsplash.it/100/56?blur&image="+value.id; });
+		gallery.addBuilder('caption', function (_gallery, index, value) { return (value.caption.length <= 16 ? value.caption : value.caption.substr(0, 16) + '...'); });
+		gallery.addBuilder('height', function (_gallery, index, value) { return "calc(( 1080 / 1920 ) * ( "+_gallery.baseElement.getElementsByClassName('container')[0].offsetWidth+"px / "+_gallery.page.max_per_line+" ))"; });
+		gallery.addBuilder('width', function (_gallery, index, value) { return "calc( 100% / "+_gallery.page.max_per_line+" - 20px )";});
+		// [END]
+
+		// Add The Bootware
+		// These Function Before The Engine Starts To
+		// Load The Templates
+		// [START]
+		gallery.addBootware(function (_gallery) {
+
+			// Set The Base html
+			// [START]
+			var html = "";
+			html += "<div class='container'></div>";
+			html += "<div class='buffer'></div>";
+			html += "<div class='controls'><button onclick='prev()'>Previous</button><div class='page_btns'></div><button onclick='next()'>Next</button></div>";
+			html += "<div class='overlay hide'></div>";
+			_gallery.baseElement.innerHTML = html;
+			// [END]
+
+			// Build And Set The BTN HTML
+			// [START]
+			var html = "";
+			for (var i=0;i<_gallery.page.max_page_size();i++) {
+				html += "<button onclick='select("+i+")'>"+(i+1)+"</button>";
+			}
+			_gallery.baseElement.getElementsByClassName('controls')[0].getElementsByClassName("page_btns")[0].innerHTML = html;
+			// [END]
+
+			// Add onclick Fucntion To The Overlay
+			// [START]
+			_gallery.baseElement.getElementsByClassName('overlay')[0].onclick = function () {
+				_gallery.toggleOverlay(_gallery);
+				this.innerHTML = '';
+			};
+			// [END]
+
+			// Check That The Max Per Line Is null
+	        // If True Run The GalleryResizeFunction Every Time
+	        // The Gallery Is Resized
+	        // This Function Sets The Correct max_per_line
+	        // For The Current Page Width
+	        // [START]
+	        if (_gallery.page.max_per_line == null) {
+	            var GalleryResizeFunction = function (event) {
+	                var width = window.innerWidth;
+	                for (var i=0;i<_gallery.page.resizeValues.length;i++) {
+	                    if (width < _gallery.page.resizeValues[i][0]) {
+	                        _gallery.page.max_per_line = _gallery.page.resizeValues[i][1];
+	                        break;
+	                    }
+	                }
+	                if (_gallery.page.max_per_line == null) {
+	                    console.log("The Configered app.resizeValues Does Not Work With Current Width! Setting app.max_per_line = 2");
+	                    _gallery.page.max_per_line = 2; }
+					_gallery.init();
+	            };
+				window.addEventListener('resize', GalleryResizeFunction, false);
+	            GalleryResizeFunction(null);
+			}
+	        // [END]
+
+			return _gallery;
+		});
+		// [END]
+
+		// Add The Middleware
+		// These Function During The Loop,
+		// But Just Before Each Template Is Loaded
+		// [START]
+		gallery.addMiddleware(function (_gallery) {
+			_gallery.parentElement = function (_gallery) { return _gallery.baseElement.getElementsByClassName('container')[0]; };
+			if (_gallery.index > _gallery.page.max_per_page+(_gallery.page.index*_gallery.page.max_per_page)-1 || _gallery.index < (_gallery.page.index*_gallery.page.max_per_page)) {
+				_gallery.parentElement = function (_gallery) { return _gallery.baseElement.getElementsByClassName('buffer')[0]; };
+			}
+			return _gallery;
+		});
+		// [END]
+
+		// Add On Click Event
+		// This Events Fires When The User Clicks An Element
+		// [START]
+		gallery.onClickFunction = function (_gallery, element) {
+			_gallery.toggleOverlay(_gallery);
+			_gallery.baseElement.getElementsByClassName('overlay')[0].style.backgroundImage = "url('"+element.getElementsByTagName('img')[0].src+"')";
+			_gallery.state = (_gallery.state == 'default' ? 'overlay' : 'default');
+		};
+		// [END]
+
+		// Set Gallery Variables
+		// baseElement is the main gallery container
+		// in_overlay holds the state of the page
+		// page, holds all the paging data
+		// [START]
+		gallery.toggleOverlay = function (_gallery) {
+			['container', 'buffer', 'overlay'].forEach(function (item) {
+				_gallery.baseElement.getElementsByClassName(item)[0].classList.toggle('hide');
+			});
+		};
+		gallery.baseElement = document.getElementsByClassName('gallery')[0];
+		gallery.state = 'default';
+		gallery.page = {
+			'index': 0,
+			'max_per_page': 6,
+			'max_per_line': null,
+			'max_page_size': function () { return Math.ceil(gallery.data.length / this['max_per_page']); },
+			'resizeValues': [
+				[320, 1],
+				[720, 2],
+		        [1024, 3],
+		        [99999999999999999, 4]
+			]
+		};
+		// [END]
+
+		// Paging Function
+		// Next Function
+		// Previous Function
+		// Select Function
+		// [START]
+		var next = function () { gallery.page.index = (gallery.page.index < gallery.page.max_page_size() - 1 ? gallery.page.index+1 : gallery.page.index); return gallery.init(); };
+		var prev = function () { gallery.page.index = (gallery.page.index > 0 ? gallery.page.index-1 : gallery.page.index); return gallery.init(); };
+		var select = function (index) {
+			if (index != null && index < gallery.page.max_page_size() && index > -1) {
+				gallery.page.index = index;
+				return gallery.init();
+			}
+		};
+		// [END]
+
+		// Set The Arrow Key Controls
+		// 37 keycode for Left Arrow
+		// 39 keycode for Right Arrow
+		// [START]
+		var KeyPressFuctions = {
+			37: prev(),
+			39: next()
+		};
+		document.addEventListener('keydown', function (evt) {
+			if (!evt) {evt = window.event;}
+  		  	var keycode = evt.keyCode || evt.which;
+			if (typeof KeyPressFuctions[keycode] == 'function') { KeyPressFuctions[keycode](); }
+		}, false);
+		// [END]
+
+		// Run The Gallery
+		gallery.init();
+
+		</script>
+	</body>
+</html>

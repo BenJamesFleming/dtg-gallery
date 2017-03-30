@@ -1,0 +1,18 @@
+<script src="../js/gallery.v2.js"></script>
+<script>
+window.onload = function() {
+	var data = [
+		"<strong>Tap On Any Text To Make It Change Colour</strong>",
+		"Hello My Name Is Ben",
+		"Hello My Name Is Tawhiri",
+		"Hellow My Name Is Alex",
+		"Hellow My Name Is ..."
+	];
+	var engine = new TemplateEngine(data);
+	engine.onClickFunction = function (_engine, element) {
+		element.style.color = (element.style.color == 'red' ? 'black' : 'red');
+		return _engine;
+	};
+	engine.init();
+};
+</script>

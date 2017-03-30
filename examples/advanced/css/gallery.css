@@ -1,0 +1,87 @@
+.gallery {
+    width: 100%;
+    height: 100%;
+}
+.gallery>.buffer {display: none;}
+.gallery>.container {
+    max-width: 100%;
+    margin: 0 2vw;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-start;
+}
+.gallery>.container.hide {
+    overflow: hidden;
+    display: none;
+}
+.gallery>.container>.img_wrap {
+    margin: 10px;
+    width: calc(100% / 3 - 20px);
+    height: auto;
+	display: flex;
+	flex-direction: column;
+	align-content: center;
+	justify-content: center;
+    background-position: 50%;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+.gallery>.container>.img_wrap>img {
+	width: 100%;
+	height: auto;
+}
+.gallery>.container>.img_wrap>.caption{
+	font-family: 'PT Sans', sans-serif;
+	font-size: 25px;
+	color: #333;
+	background: rgba(255,255,255,0.2);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+.gallery>.overlay {
+    background: #eee;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: center;
+    align-items: center;
+}
+.gallery>.overlay.hide {
+    display: none;
+}
+.gallery>.overlay>.img_wrap {
+    display: none;
+    width: 100%;
+    height: auto;
+}
+.gallery>.overlay>.img_wrap>img {
+	width: 100%;
+	height: auto;
+}
+.gallery>.overlay>.img_wrap{
+    display: flex;
+}
+.gallery>.controls {
+    padding: 10px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.gallery>.controls>button {
+    margin: 0 10px;
+}
+@media only screen  and (max-width : 1000px) {
+    .gallery>.container>img { width: calc(100% / 3 - 20px) }
+}
+@media only screen  and (max-width : 700px) {
+    .gallery>.container>img { width: calc(100% / 2 - 20px) }
+}

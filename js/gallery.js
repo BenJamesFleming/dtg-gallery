@@ -16,7 +16,7 @@ function Gallery(data=[], template="", builders={}, debug=true)
     var app = this;
 
     // Define User Editable Config
-	this.overlay_enabled = true;
+	this.overlay_enabled = false;
     this.max_per_page = 6;
 	this.max_per_line = 3;
     this.data = data;
@@ -36,7 +36,7 @@ function Gallery(data=[], template="", builders={}, debug=true)
         'html_default': null,
         'template': null,
         'template_str': null,
-        'template_default': "<img class='img_wrap' src='{{ url }}' data-id='{{ id }}'>",
+        'template_default': "<img class='img_wrap' src='{{ url }}' data-id='{{ id }}' style='width: calc(100% / {{ max_per_line }} - 20px)'>",
         'builders': null,
         'debug': null,
         'state': 'default',
@@ -114,7 +114,7 @@ function Gallery(data=[], template="", builders={}, debug=true)
         // Then Check That It Returns Valid Data
         // By Check If It Return Different Id When Given Different Data
         if (typeof config.builders['id'] !=  'function') {
-            config.builders['id'] = function (index, value) { return '_' + Math.random().toString(36).substr(2, 9); };
+            config.builders['id'] = function (_g, index, value) { return '_' + Math.random().toString(36).substr(2, 9); };
         }
 
         // Check That The Config Data Size Is Bigger Than 1
@@ -144,7 +144,13 @@ function Gallery(data=[], template="", builders={}, debug=true)
         // Check URL Builder
         // If Not Valid Revert To Default
         if (typeof config.builders['url'] != 'function') {
-            config.builders['url'] = function (index, data) { return data; };
+            config.builders['url'] = function (_g, index, data) { return data; };
+        }
+
+        // Check URL Builder
+        // If Not Valid Revert To Default
+        if (typeof config.builders['max_per_line'] != 'function') {
+            config.builders['max_per_line'] = function (_g, index, data) { return app.config.page.max_per_line; };
         }
 
         // Check HTML Default
