@@ -86,7 +86,7 @@
 		// Add The Builders
 		// To Insert The Data Into The Template
 		// [START]
-		gallery.addBuilder('url', function (_gallery, index, value) { return "http://unsplash.it/1920/1080?image="+value.id; });
+		gallery.addBuilder('url', function (_gallery, index, value) { return "https://unsplash.it/1920/1080?image="+value.id; });
 		gallery.addBuilder('url_s', function (_gallery, index, value) { return "https://unsplash.it/100/56?blur&image="+value.id; });
 		gallery.addBuilder('caption', function (_gallery, index, value) { return (value.caption.length <= 16 ? value.caption : value.caption.substr(0, 16) + '...'); });
 		gallery.addBuilder('height', function (_gallery, index, value) { return "calc(( 1080 / 1920 ) * ( "+_gallery.baseElement.getElementsByClassName('container')[0].offsetWidth+"px / "+_gallery.page.max_per_line+" ))"; });
