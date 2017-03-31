@@ -13,7 +13,7 @@ function TemplateEngine(data=[]) {
 	this.template = function (_this) { return "<span>{{ value }}<br></span>"; };
 	this.template_signals = ["{{ ", " }}"];
 	this.builders = {
-		'id': function (_this, index, value) { return '_' + Math.random().toString(36).substr(2, 9); },
+		'index': function (_this, index, value) { return index; },
 		'value': function (_this, index, value) { return value; }
 	};
 	this.bootware = [];
@@ -50,7 +50,7 @@ function TemplateEngine(data=[]) {
 				_this = _this.middleware[j](_this);
 			}
 			if (_this.skip) { continue; }
-			_this.parentElement(_this).innerHTML += _this.injectHTML(_this, {'index': i, 'value': _this.data[i]}, _this.template(), _this.builders);
+			_this.parentElement(_this).innerHTML += _this.injectHTML(_this, {'index': i, 'value': _this.data[i]}, _this.template(_this), _this.builders);
 			Array.from(_this.parentElement(_this).childNodes).forEach(function (node) {
 				node.onclick = function () { _this.onClickFunction(_this, node); };
 			});
@@ -58,9 +58,11 @@ function TemplateEngine(data=[]) {
 		return _this;
 	};
 	this.init = function () {
+		_this.kill=false;
 		for (var i=0;i<_this.bootware.length;i++) {
 			_this = _this.bootware[i](_this);
 		}
+		if (_this.kill) { return _this; };
 		return _this.run(_this);
 	};
 	return _this;

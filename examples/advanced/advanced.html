@@ -79,8 +79,14 @@
 
 		// Set The Template
 		// For Each Item
-		gallery.template = function () {
-			return "<div class='img_wrap' data-id='{{ id }}' style='background-image: url(\"{{ url_s }}\");min-height:{{ height }};width:{{ width }};'><img src='{{ url }}'><div class='caption'>{{ caption }}</div></div>";
+		gallery.template = function (_gallery) {
+			var t = "<div class='img_wrap' data-id='{{ index }}' style='background-image: url(\"{{ url_s }}\");min-height:{{ height }};width:{{ width }};'><img src='{{ url }}'><div class='caption'>{{ caption }}</div></div>";
+			var t_overlay = "<div class='img_wrap overlay_img' data-id='{{ index }}' style='background-image: url({{ url_s }});'><img style='background-image:url({{ url }});'><div class='img_info'><label class='caption'>{{ caption }}</label><div class='label_group vertical'><label class='size'>{{ oringal_size }}</label><label class='author'>Provided By <a href='http://unsplash.it/' target='_blank'>unsplash.it/</a></label></div></div></div>";
+
+			if (_gallery.state == 'overlay') {
+				return t_overlay;
+			}
+			return t;
 		};
 
 		// Add The Builders
@@ -88,7 +94,7 @@
 		// [START]
 		gallery.addBuilder('url', function (_gallery, index, value) { return "https://unsplash.it/1920/1080?image="+value.id; });
 		gallery.addBuilder('url_s', function (_gallery, index, value) { return "https://unsplash.it/100/56?blur&image="+value.id; });
-		gallery.addBuilder('caption', function (_gallery, index, value) { return (value.caption.length <= 16 ? value.caption : value.caption.substr(0, 16) + '...'); });
+		gallery.addBuilder('caption', function (_gallery, index, value) { return (value.caption.length <= 16 || _gallery.state == 'overlay' ? value.caption : value.caption.substr(0, 16) + '...'); });
 		gallery.addBuilder('height', function (_gallery, index, value) { return "calc(( 1080 / 1920 ) * ( "+_gallery.baseElement.getElementsByClassName('container')[0].offsetWidth+"px / "+_gallery.page.max_per_line+" ))"; });
 		gallery.addBuilder('width', function (_gallery, index, value) { return "calc( 100% / "+_gallery.page.max_per_line+" - 20px )";});
 		// [END]
@@ -98,6 +104,10 @@
 		// Load The Templates
 		// [START]
 		gallery.addBootware(function (_gallery) {
+
+			if (_gallery.state == 'overlay') {
+				_gallery.kill = true;
+				return _gallery; }
 
 			// Set The Base html
 			// [START]
@@ -121,6 +131,11 @@
 			// Add onclick Fucntion To The Overlay
 			// [START]
 			_gallery.baseElement.getElementsByClassName('overlay')[0].onclick = function () {
+				// Set The Gallery State
+				_gallery.state = (_gallery.state == 'default' ? 'overlay' : 'default');
+
+				// Toggle The Overlay classes
+				// Then Clear The Overlay
 				_gallery.toggleOverlay(_gallery);
 				this.innerHTML = '';
 			};
@@ -171,9 +186,19 @@
 		// This Events Fires When The User Clicks An Element
 		// [START]
 		gallery.onClickFunction = function (_gallery, element) {
-			_gallery.toggleOverlay(_gallery);
-			_gallery.baseElement.getElementsByClassName('overlay')[0].style.backgroundImage = "url('"+element.getElementsByTagName('img')[0].src+"')";
+			// Set The Gallery State
 			_gallery.state = (_gallery.state == 'default' ? 'overlay' : 'default');
+
+			// Set The Variables
+			// Get The Overlay element
+			// And The Index of THe clicked element
+			var overlay = _gallery.baseElement.getElementsByClassName('overlay')[0];
+			var index = element.getAttribute('data-id');
+
+			// Inject HTML With Overlay Template
+			// Then Toggle The Overlay classes
+			overlay.innerHTML = _gallery.injectHTML(_gallery, {'index': index, 'value': _gallery.data[index]}, _gallery.template(_gallery), _gallery.builders);
+			_gallery.toggleOverlay(_gallery);
 		};
 		// [END]
 
