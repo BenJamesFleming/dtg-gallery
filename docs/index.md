@@ -23,8 +23,8 @@ Variable | About
 -------- | -----
 data | This is the data array that the program uses, it can be set when calling the `new TemplateEngine(data)` or by `engine.data = data`. ***Must Be `typeof 'array'`***
 parentElement | This is the element that all the templates get appended to. It can be set to a spefic element `engine.parentElement = function(_engine) { return document.getElementById(...); }`. By default the program creates its own parentElement `<div class="TEMPLATE_ENGINE_ELEMENT"></div`, and appends it to the body element. ***Must Be `typeof 'function'`***. This function must take one parameter, `function(_engine)`. `_engine` is the TemplateEngine() Object.
-template | This is the template variable. The program will use this to  get the template for the current data value. It can be set by `engine.template = function(_engine) { return "<div class='...'>{% raw %}{{ value }}{% endraw %}</div>"; }`. By default the program uses the following simple template `"<span>{{ value }}<br></span>"`. ***Must Be `typeof 'function'`***. This function must take one parameter, `function(_engine)`. `_engine` is the TemplateEngine() Object.
-template_signals | This is an array containing the template signals. These signal are what tell the program where a variable is in the template. The default value is `["{{", "}}"]`, this tells the program to look for `'{{ ... }}'` in the template, where `'...'` represents the variable name of a builder. ***Must Be `typeof 'array'` With A Length Of 2***
+template | This is the template variable. The program will use this to  get the template for the current data value. It can be set by `engine.template = function(_engine) { return "<div class='...'>{% raw %}{{ value }}{% endraw %}</div>"; }`. By default the program uses the following simple template `"<span>{% raw %}{{ value }}{% endraw %}<br></span>"`. ***Must Be `typeof 'function'`***. This function must take one parameter, `function(_engine)`. `_engine` is the TemplateEngine() Object.
+template_signals | This is an array containing the template signals. These signal are what tell the program where a variable is in the template. The default value is `["{{", "}}"]`, this tells the program to look for `'{% raw %}{{ ... }}{% endraw %}'` in the template, where `'...'` represents the variable name of a builder. ***Must Be `typeof 'array'` With A Length Of 2***
 
 
 ## Basic Usage
@@ -104,11 +104,11 @@ window.onload = function() {
 Another thing that we can do is set a better template, since the default one will only work for some simple use cases.
 
  * **What Is The Template:** The template is the string that the program injects data into.
- * **How It Works:** The template has variables in the string, `<div>{{ value }}</div>`. The program will find these variables and replace them with the value that is returned by their builder. For Example the program will find `{{ value }}` in the template, and replace it with the returned string of `builders['value'](_engine, index, value)`
+ * **How It Works:** The template has variables in the string, `<div>{% raw %}{{ value }}{% endraw %}</div>`. The program will find these variables and replace them with the value that is returned by their builder. For Example the program will find `{% raw %}{{ value }}{% endraw %}` in the template, and replace it with the returned string of `builders['value'](_engine, index, value)`
 
-> **Note:** For every variable in the tempalte there needs to be a matching builder. For Example, if `'{{ name }}'` is in the template, there sould be a builder for it. `typeof builder['name'] == 'function'`.
+> **Note:** For every variable in the tempalte there needs to be a matching builder. For Example, if `'{% raw %}{{ name }}{% endraw %}'` is in the template, there sould be a builder for it. `typeof builder['name'] == 'function'`.
 
-For the example below the two parameters are `'{{ value }}'` and `'{{ index }}'`, these are default parameters so therefore don't need builders. **But** because we are modifying the value, we need to set the value builder to get the modified variables.
+For the example below the two parameters are `'{% raw %}{{ value }}{% endraw %}'` and `'{% raw %}{{ index }}{% endraw %}'`, these are default parameters so therefore don't need builders. **But** because we are modifying the value, we need to set the value builder to get the modified variables.
 
 <a href="basic-03.html" target='\_blank'>VIEW CODE IN ACTION</a>
 ```html
@@ -126,7 +126,7 @@ window.onload = function() {
 
 	////////////////// This Is The Addition
 	engine.template = function(_engine) {
-		return '<div>{{ value }}, This is at index {{ index }}</div>';
+		return '<div>{% raw %}{{ value }}{% endraw %}, This is at index {% raw %}{{ index }}{% endraw %}</div>';
 	};
 	//////////////////
 
@@ -179,7 +179,7 @@ window.onload = function() {
 	//////////////////
 
 	engine.template = function(_engine) {
-		return '<div>{{ value }}, This is at index {{ index }}</div>';
+		return '<div>{% raw %}{{ value }}{% endraw %}, This is at index {% raw %}{{ index }}{% endraw %}</div>';
 	};
 	engine.addBuilder('value', function (_engine, index, value) {
 		if (index > 0) {
@@ -235,7 +235,7 @@ window.onload = function() {
 		return _engine;
 	});
 	engine.template = function(_engine) {
-		return '<div>{{ value }}, This is at index {{ index }}</div>';
+		return '<div>{% raw %}{{ value }}{% endraw %}, This is at index {% raw %}{{ index }}{% endraw %}</div>';
 	};
 	engine.addBuilder('value', function (_engine, index, value) {
 		if (index > 0) {
