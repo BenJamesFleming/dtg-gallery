@@ -75,7 +75,7 @@ window.onload = function() {
 Another thing that we can do is set a better template, since the default one will only work for some simple use cases.
 
  * **What Is The Template:** The template is the string that the program injects data into.
- * **How It Works:** The template has variables in the string, `<div>{{ value }}</div>`. The program will find these variables and replace them with the value that is returned by their builder. For Example the program will find `{{{ value }}}` in the template, and replace it with the returned string of `builders['value'](_engine, index, value)`
+ * **How It Works:** The template has variables in the string, `<div>{{ value }}</div>`. The program will find these variables and replace them with the value that is returned by their builder. For Example the program will find `{{ value }}` in the template, and replace it with the returned string of `builders['value'](_engine, index, value)`
 
 > **Note:** For every variable in the tempalte there needs to be a matching builder. For Example, if `'{{ name }}'` is in the template, there sould be a builder for it. `typeof builder['name'] == 'function'`.
 
