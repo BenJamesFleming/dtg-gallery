@@ -1,0 +1,41 @@
+<div class='names'></div>
+<script src="../js/template.min.js"></script>
+<script>
+window.onload = function() {
+	var data = [
+		"<strong>Tap On Any Text To Make It Change Colour</strong>",
+		"Ben",
+		"Tawhiri",
+		"Alex",
+		"..."
+	];
+	var engine = new TemplateEngine(data);
+
+	////////////////// This Is An Addition
+	engine.parentElement = function (_engine) {
+		return document.getElementsByClassName('names')[0];
+	};
+	//////////////////
+
+	engine.addMiddleware(function (_engine, index) {
+		if (index == 2) {
+			_engine.skip = true;
+		}
+		return _engine;
+	});
+	engine.template = function(_engine) {
+		return '<div>{{ value }}, This is at index {{ index }}</div>';
+	};
+	engine.addBuilder('value', function (_engine, index, value) {
+		if (index > 0) {
+			return "Hello My Name Is "+value;
+		}
+		return value;
+	});
+	engine.onClickFunction = function (_engine, element) {
+		element.style.color = (element.style.color == 'red' ? 'black' : 'red');
+		return _engine;
+	};
+	engine.init();
+};
+</script>

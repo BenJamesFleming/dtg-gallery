@@ -3,12 +3,22 @@
 window.onload = function() {
 	var data = [
 		"<strong>Tap On Any Text To Make It Change Colour</strong>",
-		"Hello My Name Is Ben",
-		"Hello My Name Is Tawhiri",
-		"Hellow My Name Is Alex",
-		"Hellow My Name Is ..."
+		"Ben",
+		"Tawhiri",
+		"Alex",
+		"..."
 	];
 	var engine = new TemplateEngine(data);
+
+	////////////////// This Is The Addition
+	engine.addBuilder('value', function (_engine, index, value) {
+		if (index > 0) {
+			return "Hello My Name Is "+value;
+		}
+		return value;
+	});
+	//////////////////
+
 	engine.onClickFunction = function (_engine, element) {
 		element.style.color = (element.style.color == 'red' ? 'black' : 'red');
 		return _engine;
