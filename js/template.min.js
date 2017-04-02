@@ -32,7 +32,9 @@ function TemplateEngine(data=[]) {
 		return _this;
 	};
 	this.injectHTML = function(_this, data) {
-		var signals, keys, index = _this.template_signals, [], 0;
+		var signals = _this.template_signals;
+		var keys = [];
+		var index = 0;
 		for (var k in _this.builders) { keys.push(k); }
 		return _this.template(_this).replace(new RegExp(keys.map(function(k) {return signals[0]+k+signals[1];}).join("|"), 'g'), function (k) {
 			k = k.replace(new RegExp(signals.join("|"), 'g'), '');
