@@ -2,7 +2,7 @@
 
 **Warning:** Be Sure To Add The Script To Your HTML Head!
 
-The example below loads the `data` array onto the page, and makes the `engine.onClockFunction` toggle the color of the text from black and red. This shows some names on the page.
+The example below loads the `data` array onto the page, and makes the `engine.onClickFunction` toggle the color of the text from black and red. This shows some names on the page.
 
 <a href="basic-01.html" target='\_blank'>VIEW CODE IN ACTION</a>
 ```html
@@ -37,7 +37,7 @@ A builder with a index of `'id'` would return a string id to insert into the tem
 
 For the example below we need to check that the data is a name and not the first item in the array. We can do this by checking that the index of the data is bigger than 0, `index > 0`. If this is true the builder will return a modified version of the value, else it will return the default value.
 
-<a href="basic-02.html" target='_blank'>VIEW CODE IN ACTION</a>
+<a href="basic-02.html" target='\_blank'>VIEW CODE IN ACTION</a>
 ```html
 <script src="../js/template.min.js"></script>
 <script>
@@ -75,13 +75,13 @@ window.onload = function() {
 Another thing that we can do is set a better template, since the default one will only work for some simple use cases.
 
  * **What Is The Template:** The template is the string that the program injects data into.
- * **How It Works:** The template has variables in the string, `<div>{{ value }}</div>`. The program will find these variables and replace them with the value that is returned by their builder. For Example the program will find `'{{ value }}'` in the template, and replace it with the returned string of `builders['value'](_engine, index, value)`
+ * **How It Works:** The template has variables in the string, `<div>{{ value }}</div>`. The program will find these variables and replace them with the value that is returned by their builder. For Example the program will find `{{{ value }}}` in the template, and replace it with the returned string of `builders['value'](_engine, index, value)`
 
 > **Note:** For every variable in the tempalte there needs to be a matching builder. For Example, if `'{{ name }}'` is in the template, there sould be a builder for it. `typeof builder['name'] == 'function'`.
 
 For the example below the two parameters are `'{{ value }}'` and `'{{ index }}'`, these are default parameters so therefore don't need builders. **But** because we are modifying the value, we need to set the value builder to get the modified variables.
 
-<a href="basic-03.html" target='_blank'>VIEW CODE IN ACTION</a>
+<a href="basic-03.html" target='\_blank'>VIEW CODE IN ACTION</a>
 ```html
 <script src=".../js/template.min.js"></script>
 <script>
@@ -126,7 +126,7 @@ Another feature of the Template Engine, is that you can add Middleware. By defau
 
 With this Middleware we can set what parentElement each template is appended to, or weather to skip that index and continue on with the next one. For the example below, we will add Middleware that stops the program from showing the 3rd item in the data array, by skipping it.
 
-<a href="basic-04.html" target='_blank'>VIEW CODE IN ACTION</a>
+<a href="basic-04.html" target='\_blank'>VIEW CODE IN ACTION</a>
 ```html
 <script src="../js/template.min.js"></script>
 <script>
@@ -178,7 +178,7 @@ By default the program creates its own parentElement and adds it to the body of 
 
 In the example below we add a html element,  `<div class='names'></div>`. And then the code to set that element as the parentElement for the program.
 
-<a href="basic-05.html" target='_blank'>VIEW CODE IN ACTION</a>
+<a href="basic-05.html" target='\_blank'>VIEW CODE IN ACTION</a>
 ```html
 <div class='names'></div>
 <script src="../js/template.min.js"></script>
