@@ -1,7 +1,7 @@
 # Template Engine
 > This is a school project for **DTG3**
 
-> Main File : [`js/template.js`](https://github.com/BenJamesFleming/dtg-gallery/blob/master/js/template.js)
+> Main File : [`js/template.js`](https://github.com/BenJamesFleming/tempalte.js/blob/master/js/template.js)
 
 ---
 #### Template Engine Functions

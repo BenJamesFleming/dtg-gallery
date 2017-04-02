@@ -1,9 +1,9 @@
 # Template Engine
 > This is a school project for **DTG3**
 
-> Main File : [`js/template.js`](https://github.com/BenJamesFleming/dtg-gallery/blob/master/js/template.js)
+> Main File : [`js/template.js`](https://github.com/BenJamesFleming/template.js/blob/master/js/template.js)
 
-> Click [Here](docs/) To View Basic Usage
+> Click [Here](https://benjamesfleming.github.io/template.js/) To View Basic Usage
 
 ---
 #### Template Engine Functions
@@ -25,5 +25,5 @@ Variable | About
 -------- | -----
 data | This is the data array that the program uses, it can be set when calling the `new TemplateEngine(data)` or by `engine.data = data`. ***Must Be `typeof 'array'`***
 parentElement | This is the element that all the templates get appended to. It can be set to a spefic element `engine.parentElement = function(_engine) { return document.getElementById(...); }`. By default the program creates its own parentElement `<div class="TEMPLATE_ENGINE_ELEMENT"></div`, and appends it to the body element. ***Must Be `typeof 'function'`***. This function must take one parameter, `function(_engine)`. `_engine` is the TemplateEngine() Object.
-template | This is the template variable. The program will use this to  get the template for the current data value. It can be set by `engine.template = function(_engine) { return "<div class='...'>{% raw %}{{ value }}{% endraw %}</div>"; }`. By default the program uses the following simple template `"<span>{{ value }}<br></span>"`. ***Must Be `typeof 'function'`***. This function must take one parameter, `function(_engine)`. `_engine` is the TemplateEngine() Object.
+template | This is the template variable. The program will use this to  get the template for the current data value. It can be set by `engine.template = function(_engine) { return "<div class='...'>{{ value }}</div>"; }`. By default the program uses the following simple template `"<span>{{ value }}<br></span>"`. ***Must Be `typeof 'function'`***. This function must take one parameter, `function(_engine)`. `_engine` is the TemplateEngine() Object.
 template_signals | This is an array containing the template signals. These signal are what tell the program where a variable is in the template. The default value is `["{{", "}}"]`, this tells the program to look for `'{{ ... }}'` in the template, where `'...'` represents the variable name of a builder. ***Must Be `typeof 'array'` With A Length Of 2***
