@@ -1,7 +1,27 @@
 # Template Engine
 > This is a school project for **DTG3**
 
-> Main File : [`js/template.js`](https://github.com/BenJamesFleming/tempalte.js/blob/master/js/template.js)
+> Main File : [`js/template.js`](https://github.com/BenJamesFleming/template.js/blob/master/js/template.js)
+
+---
+#### Usage
+
+<a href="basic-00.html" target='\_blank'>VIEW CODE IN ACTION</a>
+```html
+<script src="js/template.min.js"></script>
+<script>
+window.onload = function () {
+	TemplateEngine([
+		"This is item 1",
+		"This is item 2",
+		"This is item 3",
+		"This is item 4",
+		"..."
+	]).init();
+};
+</script>
+
+```
 
 ---
 #### Template Engine Functions
@@ -35,7 +55,7 @@ The example below loads the `data` array onto the page, and makes the `engine.on
 
 <a href="basic-01.html" target='\_blank'>VIEW CODE IN ACTION</a>
 ```html
-<script src="../js/template.min.js"></script>
+<script src="js/template.min.js"></script>
 <script>
 window.onload = function() {
 	var data = [
@@ -47,12 +67,13 @@ window.onload = function() {
 	];
 	var engine = new TemplateEngine(data);
 	engine.onClickFunction = function (_engine, element) {
-		element.style.color = (element.style.color == 'red' ? 'black' : 'red');
+		element.style.color = '#'+(Math.random()*0xFFFFFF<<0).toString(16);
 		return _engine;
 	};
 	engine.init();
 };
 </script>
+
 ```
 
 ---
@@ -68,7 +89,7 @@ For the example below we need to check that the data is a name and not the first
 
 <a href="basic-02.html" target='\_blank'>VIEW CODE IN ACTION</a>
 ```html
-<script src="../js/template.min.js"></script>
+<script src="js/template.min.js"></script>
 <script>
 window.onload = function() {
 	var data = [
@@ -90,7 +111,7 @@ window.onload = function() {
 	//////////////////
 
 	engine.onClickFunction = function (_engine, element) {
-		element.style.color = (element.style.color == 'red' ? 'black' : 'red');
+		element.style.color = '#'+(Math.random()*0xFFFFFF<<0).toString(16);
 		return _engine;
 	};
 	engine.init();
@@ -112,7 +133,7 @@ For the example below the two parameters are `'{% raw %}{{ value }}{% endraw %}'
 
 <a href="basic-03.html" target='\_blank'>VIEW CODE IN ACTION</a>
 ```html
-<script src=".../js/template.min.js"></script>
+<script src="js/template.min.js"></script>
 <script>
 window.onload = function() {
 	var data = [
@@ -126,7 +147,7 @@ window.onload = function() {
 
 	////////////////// This Is The Addition
 	engine.template = function(_engine) {
-		return '<div>{% raw %}{{ value }}{% endraw %}, This is at index {% raw %}{{ index }}{% endraw %}</div>';
+		return '<div style=\'user-select:none;\'>{{ value }}, This is at index {{ index }}</div>';
 	};
 	//////////////////
 
@@ -137,12 +158,13 @@ window.onload = function() {
 		return value;
 	});
 	engine.onClickFunction = function (_engine, element) {
-		element.style.color = (element.style.color == 'red' ? 'black' : 'red');
+		element.style.color = '#'+(Math.random()*0xFFFFFF<<0).toString(16);
 		return _engine;
 	};
 	engine.init();
 };
 </script>
+
 ```
 
 ---
@@ -157,7 +179,7 @@ With this Middleware we can set what parentElement each template is appended to,
 
 <a href="basic-04.html" target='\_blank'>VIEW CODE IN ACTION</a>
 ```html
-<script src="../js/template.min.js"></script>
+<script src="js/template.min.js"></script>
 <script>
 window.onload = function() {
 	var data = [
@@ -179,7 +201,7 @@ window.onload = function() {
 	//////////////////
 
 	engine.template = function(_engine) {
-		return '<div>{% raw %}{{ value }}{% endraw %}, This is at index {% raw %}{{ index }}{% endraw %}</div>';
+		return '<div style=\'user-select:none;\'>{{ value }}, This is at index {{ index }}</div>';
 	};
 	engine.addBuilder('value', function (_engine, index, value) {
 		if (index > 0) {
@@ -188,7 +210,7 @@ window.onload = function() {
 		return value;
 	});
 	engine.onClickFunction = function (_engine, element) {
-		element.style.color = (element.style.color == 'red' ? 'black' : 'red');
+		element.style.color = '#'+(Math.random()*0xFFFFFF<<0).toString(16);
 		return _engine;
 	};
 	engine.init();
@@ -210,7 +232,7 @@ In the example below we add a html element,  `<div class='names'></div>`. And th
 <a href="basic-05.html" target='\_blank'>VIEW CODE IN ACTION</a>
 ```html
 <div class='names'></div>
-<script src="../js/template.min.js"></script>
+<script src="js/template.min.js"></script>
 <script>
 window.onload = function() {
 	var data = [
@@ -235,7 +257,7 @@ window.onload = function() {
 		return _engine;
 	});
 	engine.template = function(_engine) {
-		return '<div>{% raw %}{{ value }}{% endraw %}, This is at index {% raw %}{{ index }}{% endraw %}</div>';
+		return '<div style=\'user-select:none;\'>{{ value }}, This is at index {{ index }}</div>';
 	};
 	engine.addBuilder('value', function (_engine, index, value) {
 		if (index > 0) {
@@ -244,10 +266,150 @@ window.onload = function() {
 		return value;
 	});
 	engine.onClickFunction = function (_engine, element) {
-		element.style.color = (element.style.color == 'red' ? 'black' : 'red');
+		element.style.color = '#'+(Math.random()*0xFFFFFF<<0).toString(16);
 		return _engine;
 	};
 	engine.init();
 };
 </script>
 ```
+
+---
+##### Using More Advanced Data Sets
+
+For most applications you will want to output more than a single string from a dataset. This is where **Advanced Datasets** come in. Using these we can add a lot more to what our program does.
+
+ * **What Is An Advanced Dataset:** An Advanced Dataset is a dataset that has more than an single string. An advanced dataset could have objects with multiple strings or even bools.
+
+ * **How It Works:** The program uses a build to get the data out of the dataset. Because you are making the builders yourself, the data structure can be whatever you want / need.
+
+> **Note:** If you don't set what the program should do for `{% raw %}{{ value }}{% endraw %}`, the program will get the first string in the data object.
+
+```html
+<script src="js/template.min.js"></script>
+<script>
+window.onload = function() {
+	var data = [
+		"<strong>Tap On Any Text To Make It Change Colour</strong>",
+		{
+			name: 'Ben',
+			age: 17
+		},
+	    [
+			"Tawhiri",
+			17
+		],
+		"Alex",
+		"..."
+	];
+	var engine = new TemplateEngine(data);
+
+	engine.template = function(_engine, index) {
+		if (index < 1) {
+			return '<div>{{ value }}</div>';
+		}
+		return '<div style=\'user-select:none;\'>Hello my name is {{ value }}, Age {{ age }}. I am located at index {{ index }} in the dataset.</div>';
+	};
+
+	////////////////// This Is The Addition
+	engine.addBuilder('age', function (_engine, index, value) {
+		if (Array.isArray(value)) return value[1];			// Check If value Is An Array
+		if (typeof value == 'object') return value['age'];  // Check If value Is An Object
+		return 'Unknown';									// If value Is Not An Array or Object,
+															// There Must Not Be A Age Defined, So Return 'Unknown'
+	});
+	//////////////////
+
+	engine.onClickFunction = function (_engine, element) {
+		element.style.color = '#'+(Math.random()*0xFFFFFF<<0).toString(16);
+		return _engine;
+	};
+	engine.init();
+};
+</script>
+
+```
+
+---
+##### Line By Line
+
+```html
+<script src="js/template.min.js"></script>
+```
+
+This code loads the template script into the program.
+
+---
+```javascript
+window.onload = function() {};
+```
+
+This code waits for the window to load before running the program, this is good practice because it makes sure that the webpage is ready for the JavaScript to run.
+
+---
+```javascript
+var data = [
+	"<strong>Tap On Any Text To Make It Change Colour</strong>",
+	{
+		name: 'Ben',
+		age: 17
+	},
+	[
+		"Tawhiri",
+		17
+	],
+	"Alex",
+	"..."
+];
+```
+
+This is the Dataset / Data Array that the Template Engine will use. It holds all the data for the engine to run. This example shows the advanced dataset with different types of data. The first line is a *String*, the second is a *JavaScript Object*, and the third is an *Array*. Having different types of data does not break the engine, but it does make it harder to expand,
+
+> **Note:** It is recommended to only have one type of data in your Dataset, e.g. all strings or all objects.
+
+---
+```javascript
+var engine = new TemplateEngine(data);
+```
+
+This loads up the template engine, with the data but it does not start the engine. Load the template engine into a variables if you want to doe some more setup.
+
+---
+```javascript
+engine.template = function(_engine, index) {
+	if (index < 1) {
+		return '<div>{{ value }}</div>';
+	}
+	return '<div style=\'user-select:none;\'>Hello my name is {{ value }}, Age {{ age }}. I am located at index {{ index }} in the dataset.</div>';
+};
+```
+
+This code sets the template function. This allows you to set what template the program should use for each item, in the dataset. This template function loads a very basic template for the first item in the dataset, `data[0]`, and a more advanced one for the rest of the items. In these template string is where you put your variables. For Example for the first item, the only variable used is `value`, whereas the other items use three variables `value`, `age` & `index`.
+
+---
+```javascript
+engine.addBuilder('age', function (_engine, index, value) {
+	if (Array.isArray(value)) return value[1];		
+	if (typeof value == 'object') return value['age'];  
+	return 'Unknown';									
+});
+```
+
+This code adds a builder for the age variable that gets injected into the template. The name is defined as `age`, this is the first parameter in the addBuilder function. The second parameter in this function, is a function that returns a string for the template. The function is given the index and value to work out what value to return. For this example the `typeof value` is Unknown, so the function has to check how to get the data out of the dataset. If the data is not an Array or an Object, Then it cannot have the data for the age variable so it returns `string 'Unknown'` to insert into the template.
+
+---
+```javascript
+engine.onClickFunction = function (_engine, element) {
+	element.style.color = '#'+(Math.random()*0xFFFFFF<<0).toString(16);
+	return _engine;
+};
+```
+
+This code defines the function that is called when one of the elements is clicked. This functions should return the engine object that is given to it. This function changes the colour of the element to a random hex value. But your function could do anything that you need it to.
+
+---
+```javascript
+engine.init();
+```
+
+This final code starts the Template Engine after all the setup has been completed.

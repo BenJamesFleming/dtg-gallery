@@ -20,7 +20,7 @@ window.onload = function() {
 	//////////////////
 
 	engine.template = function(_engine) {
-		return '<div>{{ value }}, This is at index {{ index }}</div>';
+		return '<div style=\'user-select:none;\'>{{ value }}, This is at index {{ index }}</div>';
 	};
 	engine.addBuilder('value', function (_engine, index, value) {
 		if (index > 0) {
@@ -29,7 +29,7 @@ window.onload = function() {
 		return value;
 	});
 	engine.onClickFunction = function (_engine, element) {
-		element.style.color = (element.style.color == 'red' ? 'black' : 'red');
+		element.style.color = '#'+(Math.random()*0xFFFFFF<<0).toString(16);
 		return _engine;
 	};
 	engine.init();

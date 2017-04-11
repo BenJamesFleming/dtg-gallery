@@ -1,0 +1,41 @@
+<script src="js/template.min.js"></script>
+<script>
+window.onload = function() {
+	var data = [
+		"<strong>Tap On Any Text To Make It Change Colour</strong>",
+		{
+			name: 'Ben',
+			age: 17
+		},
+	    [
+			"Tawhiri",
+			17
+		],
+		"Alex",
+		"..."
+	];
+	var engine = new TemplateEngine(data);
+
+	engine.template = function(_engine, index) {
+		if (index < 1) {
+			return '<div>{{ value }}</div>';
+		}
+		return '<div style=\'user-select:none;\'>Hello my name is {{ value }}, Age {{ age }}. I am located at index {{ index }} in the dataset.</div>';
+	};
+
+	////////////////// This Is The Addition
+	engine.addBuilder('age', function (_engine, index, value) {
+		if (Array.isArray(value)) return value[1];			// Check If value Is An Array
+		if (typeof value == 'object') return value['age'];  // Check If value Is An Object
+		return 'Unknown';									// If value Is Not An Array or Object,
+															// There Must Not Be A Age Defined, So Return 'Unknown'
+	});
+	//////////////////
+
+	engine.onClickFunction = function (_engine, element) {
+		element.style.color = '#'+(Math.random()*0xFFFFFF<<0).toString(16);
+		return _engine;
+	};
+	engine.init();
+};
+</script>

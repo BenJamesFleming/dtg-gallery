@@ -6,6 +6,26 @@
 > Click [Here](https://benjamesfleming.github.io/template.js/) To View Basic Usage
 
 ---
+#### Usage
+
+<a href="https://benjamesfleming.github.io/template.js/basic-00.html" target='\_blank'>VIEW CODE IN ACTION</a>
+```html
+<script src="js/template.min.js"></script>
+<script>
+window.onload = function () {
+	TemplateEngine([
+		"This is item 1",
+		"This is item 2",
+		"This is item 3",
+		"This is item 4",
+		"..."
+	]).init();
+};
+</script>
+
+```
+
+---
 #### Template Engine Functions
 
 > These Are The Functions For `new TemplateEngine()`
