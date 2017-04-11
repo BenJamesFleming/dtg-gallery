@@ -147,7 +147,7 @@ window.onload = function() {
 
 	////////////////// This Is The Addition
 	engine.template = function(_engine) {
-		return '<div style=\'user-select:none;\'>{{ value }}, This is at index {{ index }}</div>';
+		return '<div style=\'user-select:none;\'>{% raw %}{{ value }}{% endraw %}, This is at index {% raw %}{{ index }}{% endraw %}</div>';
 	};
 	//////////////////
 
@@ -201,7 +201,7 @@ window.onload = function() {
 	//////////////////
 
 	engine.template = function(_engine) {
-		return '<div style=\'user-select:none;\'>{{ value }}, This is at index {{ index }}</div>';
+		return '<div style=\'user-select:none;\'>{% raw %}{{ value }}{% endraw %}, This is at index {% raw %}{{ index }}{% endraw %}</div>';
 	};
 	engine.addBuilder('value', function (_engine, index, value) {
 		if (index > 0) {
@@ -257,7 +257,7 @@ window.onload = function() {
 		return _engine;
 	});
 	engine.template = function(_engine) {
-		return '<div style=\'user-select:none;\'>{{ value }}, This is at index {{ index }}</div>';
+		return '<div style=\'user-select:none;\'>{% raw %}{{ value }}{% endraw %}, This is at index {% raw %}{{ index }}{% endraw %}</div>';
 	};
 	engine.addBuilder('value', function (_engine, index, value) {
 		if (index > 0) {
@@ -306,9 +306,9 @@ window.onload = function() {
 
 	engine.template = function(_engine, index) {
 		if (index < 1) {
-			return '<div>{{ value }}</div>';
+			return '<div>{% raw %}{{ value }}{% endraw %}</div>';
 		}
-		return '<div style=\'user-select:none;\'>Hello my name is {{ value }}, Age {{ age }}. I am located at index {{ index }} in the dataset.</div>';
+		return '<div style=\'user-select:none;\'>Hello my name is {% raw %}{{ value }}{% endraw %}, Age {% raw %}{{ age }}{% endraw %}. I am located at index {% raw %}{{ index }}{% endraw %} in the dataset.</div>';
 	};
 
 	////////////////// This Is The Addition
@@ -378,9 +378,9 @@ This loads up the template engine, with the data but it does not start the engin
 ```javascript
 engine.template = function(_engine, index) {
 	if (index < 1) {
-		return '<div>{{ value }}</div>';
+		return '<div>{% raw %}{{ value }}{% endraw %}</div>';
 	}
-	return '<div style=\'user-select:none;\'>Hello my name is {{ value }}, Age {{ age }}. I am located at index {{ index }} in the dataset.</div>';
+	return '<div style=\'user-select:none;\'>Hello my name is {% raw %}{{ value }}{% endraw %}, Age {% raw %}{{ age }}{% endraw %}. I am located at index {% raw %}{{ index }}{% endraw %} in the dataset.</div>';
 };
 ```
 
